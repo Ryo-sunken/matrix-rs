@@ -1,4 +1,8 @@
 pub mod matrix;
+pub mod add;
+pub mod sub;
+pub mod matmul;
+pub mod scalarmul;
 
 #[cfg(test)]
 mod tests 
