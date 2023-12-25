@@ -125,6 +125,11 @@ impl<T> Matrix<T>
         self.array.get(r * self.cols + c)
     }
 
+    pub fn is_scalar(&self) -> bool
+    {
+        self.rows == 1 && self.cols == 1
+    }
+
     pub fn reshape(&mut self, rows: usize, cols: usize)
     {
         assert_eq!(self.rows * self.cols, rows * cols);
@@ -162,6 +167,12 @@ where T: Clone,
     {
         if self.rows <= r || self.cols <= c { return None; }
         self.array.get(r * self.cols + c).cloned()
+    }
+
+    pub fn as_scalar(&self) -> Option<T>
+    {
+        assert!(self.is_scalar());
+        self.array.get(0).cloned()
     }
 
     pub fn transpose(&self) -> Self
