@@ -1,6 +1,5 @@
 use crate::matrix::Matrix;
 use num_traits::identities::{Zero, One};
-use rayon::prelude::*;
 
 impl<T> Matrix<T>
 where T: Zero + Clone
