@@ -1,5 +1,6 @@
 pub mod matrix;
 pub mod ops;
+pub mod rand;
 
 #[cfg(test)]
 mod tests 

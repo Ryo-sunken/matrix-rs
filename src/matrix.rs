@@ -1,9 +1,3 @@
-use rand::Rng;
-use rand::distributions::{Standard, Distribution};
-use rand::rngs::ThreadRng;
-
-use rand_distr::{StandardNormal, Normal};
-
 use rayon::prelude::*;
 
 use num_traits::identities::{One, Zero};
@@ -323,37 +317,6 @@ where
             array: self.array.par_iter()
                 .map(|&x| x.powf(n))
                 .collect(),
-        }
-    }
-}
-
-impl<T> Matrix<T>
-where
-    Standard: Distribution<T>,
-{
-    pub fn rand(rows: usize, cols: usize, engine: &mut ThreadRng) -> Self
-    {
-        Self
-        {
-            rows, cols,
-            array: (0..(rows * cols)).map(|_| engine.gen::<T>()).collect(),
-        }
-    }
-}
-
-
-impl<T> Matrix<T>
-where
-    T: Float,
-    StandardNormal: Distribution<T>,
-{
-    pub fn randn(rows: usize, cols: usize, engine: &mut ThreadRng) -> Self
-    {
-        let dist = Normal::<T>::new(T::zero(), T::one()).unwrap();
-        Self
-        {
-            rows, cols,
-            array: (0..(rows * cols)).map(|_| dist.sample(engine)).collect(),
         }
     }
 }
