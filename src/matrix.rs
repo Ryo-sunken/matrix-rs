@@ -3,7 +3,6 @@ use rayon::prelude::*;
 use num_traits::identities::{One, Zero};
 use num_traits::Float;
 
-use std::ops::{Mul, Div};
 use std::cmp::PartialEq;
 
 
@@ -226,50 +225,6 @@ where T: One + Zero + Clone,
 
 impl<T> Matrix<T>
 where
-    T: Mul + Copy + Send + Sync,
-    <T as Mul>::Output: Send + Sync,
-    Vec<T>: FromParallelIterator<<T as Mul>::Output>,
-{
-    pub fn cwise_mul(&self, rhs: &Matrix<T>) -> Self
-    {
-        assert_eq!(self.rows, rhs.rows);
-        assert_eq!(self.cols, rhs.cols);
-
-        Self
-        {
-            rows: self.rows,
-            cols: self.cols,
-            array: self.array.par_iter().zip(rhs.array.par_iter())
-                .map(|(&x, &y)| x * y)
-                .collect()
-        }
-    }
-}
-
-impl<T> Matrix<T>
-where
-    T: Div + Copy + Send + Sync,
-    <T as Div>::Output: Send + Sync,
-    Vec<T>: FromParallelIterator<<T as Div>::Output>,
-{
-    pub fn cwise_div(&self, rhs: &Matrix<T>) -> Self
-    {
-        assert_eq!(self.rows, rhs.rows);
-        assert_eq!(self.cols, rhs.cols);
-
-        Self
-        {
-            rows: self.rows,
-            cols: self.cols,
-            array: self.array.par_iter().zip(rhs.array.par_iter())
-                .map(|(&x, &y)| x / y)
-                .collect()
-        }
-    }
-}
-
-impl<T> Matrix<T>
-where
     T: Float + Send + Sync
 {
     pub fn exp(&self) -> Self
@@ -416,6 +371,8 @@ where
     }
 }
 
+
+// Display implementation
 impl<T> std::fmt::Display for Matrix<T>
 where T: std::fmt::Display + Copy,
 {

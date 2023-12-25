@@ -1,7 +1,52 @@
 use crate::matrix::Matrix;
-use std::ops::{Add, Mul};
+use std::ops::{Add, Mul, Div};
 use num_traits::identities::Zero;
 use rayon::prelude::*;
+
+impl<T> Matrix<T>
+where
+    T: Mul + Copy + Send + Sync,
+    <T as Mul>::Output: Send + Sync,
+    Vec<T>: FromParallelIterator<<T as Mul>::Output>,
+{
+    pub fn cwise_mul(&self, rhs: &Matrix<T>) -> Self
+    {
+        assert_eq!(self.rows, rhs.rows);
+        assert_eq!(self.cols, rhs.cols);
+
+        Self
+        {
+            rows: self.rows,
+            cols: self.cols,
+            array: self.array.par_iter().zip(rhs.array.par_iter())
+                .map(|(&x, &y)| x * y)
+                .collect()
+        }
+    }
+}
+
+impl<T> Matrix<T>
+where
+    T: Div + Copy + Send + Sync,
+    <T as Div>::Output: Send + Sync,
+    Vec<T>: FromParallelIterator<<T as Div>::Output>,
+{
+    pub fn cwise_div(&self, rhs: &Matrix<T>) -> Self
+    {
+        assert_eq!(self.rows, rhs.rows);
+        assert_eq!(self.cols, rhs.cols);
+
+        Self
+        {
+            rows: self.rows,
+            cols: self.cols,
+            array: self.array.par_iter().zip(rhs.array.par_iter())
+                .map(|(&x, &y)| x / y)
+                .collect()
+        }
+    }
+}
+
 
 impl<T> Mul<&Matrix<T>> for &Matrix<T>
 where
