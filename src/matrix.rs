@@ -1,10 +1,6 @@
 use rayon::prelude::*;
 
-use num_traits::identities::{One, Zero};
-use num_traits::Float;
-
 use std::cmp::PartialEq;
-
 
 #[derive(Clone, Debug)]
 pub struct Matrix<T>
@@ -154,128 +150,6 @@ where T: Clone,
     }
 }
 
-impl<T> Matrix<T>
-where T: Zero + Clone
-{
-    pub fn zero(rows: usize, cols: usize) -> Self
-    {
-        Self
-        {
-            rows, cols,
-            array: vec![T::zero(); rows * cols],
-        }
-    }
-
-    pub fn zero_like<U>(mat: &Matrix<U>) -> Self
-    {
-        Self::zero(mat.rows, mat.cols)
-    }
-
-    pub fn diag<const D: usize>(data: [T; D]) -> Self
-    {
-        let mut array = vec![T::zero(); D * D];
-        for d in 0..D {
-            array[d * D + d] = data[d].clone();
-        }
-
-        Self
-        {
-            rows: D, cols: D,
-            array
-        }
-    }
-}
-
-impl<T> Matrix<T>
-where T: One + Clone
-{
-    pub fn one(rows: usize, cols: usize) -> Self
-    {
-        Self
-        {
-            rows, cols,
-            array: vec![T::one(); rows * cols],
-        }
-    }
-
-    pub fn one_like<U>(mat: &Matrix<U>) -> Self
-    {
-        Self::one(mat.rows, mat.cols)
-    }
-}
-
-impl<T> Matrix<T>
-where T: One + Zero + Clone,
-{
-    pub fn eye(dim: usize) -> Self
-    {
-        let mut array = vec![T::zero(); dim * dim];
-        for i in 0..dim {
-            array[i * dim + i] = T::one();
-        }
-
-        Self
-        {
-            rows: dim,
-            cols: dim,
-            array,
-        }
-    }
-}
-
-impl<T> Matrix<T>
-where
-    T: Float + Send + Sync
-{
-    pub fn exp(&self) -> Self
-    {
-        Self
-        {
-            rows: self.rows,
-            cols: self.cols,
-            array: self.array.par_iter()
-                .map(|&x| x.exp())
-                .collect(),
-        }
-    }
-
-    pub fn sin(&self) -> Self
-    {
-        Self
-        {
-            rows: self.rows,
-            cols: self.cols,
-            array: self.array.par_iter()
-                .map(|&x| x.sin())
-                .collect(),
-        }
-    }
-
-    pub fn cos(&self) -> Self
-    {
-        Self
-        {
-            rows: self.rows,
-            cols: self.cols,
-            array: self.array.par_iter()
-                .map(|&x| x.cos())
-                .collect(),
-        }
-    }
-
-    pub fn powf(&self, n: T) -> Self
-    {
-        Self
-        {
-            rows: self.rows,
-            cols: self.cols,
-            array: self.array.par_iter()
-                .map(|&x| x.powf(n))
-                .collect(),
-        }
-    }
-}
-
 impl Matrix<f64>
 {
     pub fn max(&self, ax: Axis) -> Self
@@ -361,7 +235,7 @@ impl Matrix<f64>
 }
 
 // ParticalEq implementation
-impl<T> PartialEq<Matrix<T>> for Matrix<T>
+impl<T> PartialEq for Matrix<T>
 where
     T: PartialEq + Send + Sync,
 {
@@ -370,7 +244,6 @@ where
             .all(|(x, y)| x == y)
     }
 }
-
 
 // Display implementation
 impl<T> std::fmt::Display for Matrix<T>
