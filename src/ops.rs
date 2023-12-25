@@ -4,3 +4,6 @@ pub mod matmul;
 pub mod scalarmul;
 pub mod float;
 pub mod num;
+pub mod min;
+pub mod max;
+pub mod sum;

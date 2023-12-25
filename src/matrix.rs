@@ -83,6 +83,12 @@ impl<T> Matrix<T>
         self.array.get(r * self.cols + c)
     }
 
+    pub fn get_mut(&mut self, r: usize, c: usize) -> Option<&mut T>
+    {
+        if self.rows <= r || self.cols <= c { return None; }
+        self.array.get_mut(r * self.cols + c)
+    }
+
     pub fn is_scalar(&self) -> bool
     {
         self.rows == 1 && self.cols == 1
@@ -206,35 +212,9 @@ impl Matrix<f64>
             Axis::BOTH => Self::new([[self.array.iter().fold(f64::INFINITY, min)]]),
         }
     }
-
-    pub fn sum(&self, ax: Axis) -> Self
-    {
-        match ax {
-            Axis::ROW => {
-                let split_array = self.array.chunks(self.cols)
-                    .map(|s| s.into())
-                    .collect::<Vec<Vec<_>>>();
-                let sum_array = split_array.into_par_iter()
-                    .map(|s| s.into_par_iter().reduce(|| 0_f64, |sum, x| sum + x))
-                    .collect::<Vec<_>>();
-                Self::from_vec_col(sum_array)
-            },
-            Axis::COLUMN => {
-                let split_array = self.transpose().array.chunks(self.rows)
-                    .map(|s| s.into())
-                    .collect::<Vec<Vec<_>>>();
-                let sum_array = split_array.into_par_iter()
-                    .map(|s| s.into_par_iter().reduce(|| 0_f64, |sum, x| sum + x))
-                    .collect::<Vec<_>>();
-                Self::from_vec_row(sum_array)
-            },
-            Axis::BOTH => Self::new([[self.array.clone().into_par_iter().reduce(|| 0_f64, |sum, x| sum + x)]])
-        }
-    }
-
 }
 
-// ParticalEq implementation
+// ParticalEq, Eq implementation
 impl<T> PartialEq for Matrix<T>
 where
     T: PartialEq + Send + Sync,
@@ -244,6 +224,10 @@ where
             .all(|(x, y)| x == y)
     }
 }
+impl<T> Eq for Matrix<T> 
+where
+    T: Eq + Send + Sync,
+{}
 
 // Display implementation
 impl<T> std::fmt::Display for Matrix<T>
