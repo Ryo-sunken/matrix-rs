@@ -234,10 +234,9 @@ impl<T> std::fmt::Display for Matrix<T>
 where T: std::fmt::Display + Copy,
 {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(f, "[\n")?;
+        writeln!(f, "[")?;
         for row in self.array.chunks(self.cols) {
-            write!(f, " [ {} ]", row.iter().map(|&x| format!("{:.4}", x)).collect::<Vec<_>>().join(" "))?;
-            write!(f, "\n")?;
+            writeln!(f, " [ {} ]", row.iter().map(|&x| format!("{:.4}", x)).collect::<Vec<_>>().join(" "))?;
         }
         write!(f, "]")
     }
