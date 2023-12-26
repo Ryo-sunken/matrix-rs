@@ -6,3 +6,4 @@ pub mod float;
 pub mod num;
 pub mod minmax;
 pub mod sum;
+pub mod index;
