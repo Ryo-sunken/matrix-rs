@@ -86,4 +86,17 @@ mod tests
         assert_eq!(x.min(Axis::COLUMN), Matrix::new_row_vector([1.,2.,3.]));
         assert_eq!(x.min(Axis::BOTH),   Matrix::new([[1.]]));
     }
+
+    #[test]
+    fn index()
+    {
+        let x = Matrix::new([[1.,2.,3.,],[4.,5.,6.],[7.,8.,9.]]);
+        assert_eq!(x[0][0], 1.);
+        assert_eq!(x[2][2], 9.);
+
+        let mut y = Matrix::new([[1.,2.,3.,],[4.,5.,6.],[7.,8.,9.]]);
+        assert_eq!(y[0][0], 1.);
+        y[0][0] = -2.;
+        assert_eq!(y[0][0], -2.);
+    }
 }
