@@ -9,6 +9,14 @@ mod tests
     use crate::matrix::{Matrix, Axis};
 
     #[test]
+    fn reshape()
+    {
+        let mut x = Matrix::new([[1.,2.,3.],[4.,5.,6.],[7.,8.,9.]]);
+        x.reshape(1, 9);
+        assert_eq!(x, Matrix::new_row_vector([1.,2.,3.,4.,5.,6.,7.,8.,9.]));
+    }
+
+    #[test]
     fn transpose()
     {
         let x = Matrix::new([[1.,2.,3.],[4.,5.,6.],[7.,8.,9.]]);
