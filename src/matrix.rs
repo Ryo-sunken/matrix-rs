@@ -22,6 +22,7 @@ impl<T> Matrix<T>
 {
     pub fn new<const R: usize, const C: usize>(data: [[T; C]; R]) -> Self
     {
+        assert!(R != 0 && C != 0, "Rows or columns cannot be set to zero.");
         Self 
         {
             rows: R,
@@ -32,6 +33,7 @@ impl<T> Matrix<T>
 
     pub fn new_row_vector<const C: usize>(data: [T; C]) -> Self
     {
+        assert!(C != 0, "Columns cannot be set to zero.");
         Self
         {
             rows: 1,
@@ -42,6 +44,7 @@ impl<T> Matrix<T>
 
     pub fn new_col_vector<const R: usize>(data: [T; R]) -> Self
     {
+        assert!(R != 0, "Rows cannot be set to zero.");
         Self
         {
             rows: R,
@@ -52,6 +55,7 @@ impl<T> Matrix<T>
 
     pub fn from_vec(array: Vec<T>, rows: usize, cols: usize) -> Self
     {
+        assert!(!array.is_empty(), "Array cannot be empty.");
         Self { rows, cols, array }
     }
 
@@ -96,7 +100,7 @@ impl<T> Matrix<T>
 
     pub fn reshape(&mut self, rows: usize, cols: usize)
     {
-        assert_eq!(self.rows * self.cols, rows * cols);
+        assert_eq!(self.rows * self.cols, rows * cols, "({}, {}) cannot reshape to ({}, {})", self.rows, self.cols, rows, cols);
         self.rows = rows;
         self.cols = cols;
     }
