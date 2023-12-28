@@ -123,6 +123,8 @@ where T: Clone,
 
     pub fn from_slice<const C: usize>(data: &[[T;C]]) -> Self
     {
+        assert!(data.len() != 0, "Rows cannot be set to zero.");
+        assert!(C != 0, "Columns cannot be set to zero.");
         Self
         {
             rows: data.len(),
