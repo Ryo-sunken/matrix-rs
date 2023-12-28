@@ -42,6 +42,18 @@ where
         }
     }
 
+    pub fn sqrt(&self) -> Self
+    {
+        Self
+        {
+            rows: self.rows,
+            cols: self.cols,
+            array: self.array.par_iter()
+                .map(|&x| x.sqrt())
+                .collect(),
+        }
+    }
+
     pub fn powf(&self, n: T) -> Self
     {
         Self
