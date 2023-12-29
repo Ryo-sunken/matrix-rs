@@ -1,6 +1,6 @@
 use crate::matrix::Matrix;
-use std::ops::{Neg, Mul, MulAssign, Div, DivAssign};
 use rayon::prelude::*;
+use std::ops::{Div, DivAssign, Mul, MulAssign, Neg};
 
 macro_rules! defscalarmul {
     ( $( $t: ty ),+ ) => {
@@ -32,7 +32,6 @@ macro_rules! defscalarmul {
     };
 }
 
-
 impl<T> Neg for &Matrix<T>
 where
     T: Neg + Copy + Send + Sync,
@@ -42,13 +41,10 @@ where
     type Output = Matrix<T>;
 
     fn neg(self) -> Self::Output {
-        Self::Output
-        {
+        Self::Output {
             rows: self.rows,
             cols: self.cols,
-            array: self.array.par_iter()
-                .map(|&x| -x)
-                .collect(),
+            array: self.array.par_iter().map(|&x| -x).collect(),
         }
     }
 }
@@ -76,8 +72,7 @@ where
     type Output = Matrix<T>;
 
     fn mul(self, rhs: T) -> Self::Output {
-        Self::Output
-        {
+        Self::Output {
             rows: self.rows,
             cols: self.cols,
             array: self.array.par_iter().map(|&x| x * rhs).collect(),
@@ -108,8 +103,6 @@ where
     }
 }
 
-
-
 impl<T> Div<T> for &Matrix<T>
 where
     T: Div + Copy + Send + Sync,
@@ -119,8 +112,7 @@ where
     type Output = Matrix<T>;
 
     fn div(self, rhs: T) -> Self::Output {
-        Self::Output
-        {
+        Self::Output {
             rows: self.rows,
             cols: self.cols,
             array: self.array.par_iter().map(|&x| x / rhs).collect(),

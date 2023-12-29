@@ -1,9 +1,9 @@
 pub mod add;
-pub mod sub;
-pub mod matmul;
-pub mod scalarmul;
 pub mod float;
-pub mod num;
-pub mod minmax;
-pub mod sum;
 pub mod index;
+pub mod matmul;
+pub mod minmax;
+pub mod num;
+pub mod scalarmul;
+pub mod sub;
+pub mod sum;

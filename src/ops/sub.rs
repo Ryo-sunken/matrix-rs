@@ -1,6 +1,6 @@
 use crate::matrix::Matrix;
-use std::ops::{Sub, SubAssign};
 use rayon::prelude::*;
+use std::ops::{Sub, SubAssign};
 
 impl<T> Sub<&Matrix<T>> for &Matrix<T>
 where
@@ -14,11 +14,13 @@ where
         assert_eq!(self.rows, rhs.rows);
         assert_eq!(self.cols, rhs.cols);
 
-        Self::Output
-        {
+        Self::Output {
             rows: self.rows,
             cols: self.cols,
-            array: self.array.par_iter().zip(rhs.array.par_iter())
+            array: self
+                .array
+                .par_iter()
+                .zip(rhs.array.par_iter())
                 .map(|(&x, &y)| x - y)
                 .collect(),
         }
@@ -71,7 +73,10 @@ where
         assert_eq!(self.rows, rhs.rows);
         assert_eq!(self.cols, rhs.cols);
 
-        self.array = self.array.par_iter().zip(rhs.array.par_iter())
+        self.array = self
+            .array
+            .par_iter()
+            .zip(rhs.array.par_iter())
             .map(|(&x, &y)| x - y)
             .collect();
     }

@@ -1,7 +1,7 @@
 use crate::matrix::Matrix;
-use std::ops::{Add, Mul, Div};
 use num_traits::identities::Zero;
 use rayon::prelude::*;
+use std::ops::{Add, Div, Mul};
 
 impl<T> Matrix<T>
 where
@@ -9,18 +9,19 @@ where
     <T as Mul>::Output: Send + Sync,
     Vec<T>: FromParallelIterator<<T as Mul>::Output>,
 {
-    pub fn cwise_mul(&self, rhs: &Matrix<T>) -> Self
-    {
+    pub fn cwise_mul(&self, rhs: &Matrix<T>) -> Self {
         assert_eq!(self.rows, rhs.rows);
         assert_eq!(self.cols, rhs.cols);
 
-        Self
-        {
+        Self {
             rows: self.rows,
             cols: self.cols,
-            array: self.array.par_iter().zip(rhs.array.par_iter())
+            array: self
+                .array
+                .par_iter()
+                .zip(rhs.array.par_iter())
                 .map(|(&x, &y)| x * y)
-                .collect()
+                .collect(),
         }
     }
 }
@@ -31,22 +32,22 @@ where
     <T as Div>::Output: Send + Sync,
     Vec<T>: FromParallelIterator<<T as Div>::Output>,
 {
-    pub fn cwise_div(&self, rhs: &Matrix<T>) -> Self
-    {
+    pub fn cwise_div(&self, rhs: &Matrix<T>) -> Self {
         assert_eq!(self.rows, rhs.rows);
         assert_eq!(self.cols, rhs.cols);
 
-        Self
-        {
+        Self {
             rows: self.rows,
             cols: self.cols,
-            array: self.array.par_iter().zip(rhs.array.par_iter())
+            array: self
+                .array
+                .par_iter()
+                .zip(rhs.array.par_iter())
                 .map(|(&x, &y)| x / y)
-                .collect()
+                .collect(),
         }
     }
 }
-
 
 impl<T> Mul<&Matrix<T>> for &Matrix<T>
 where
@@ -69,8 +70,7 @@ where
             }
         }
 
-        Self::Output
-        {
+        Self::Output {
             rows: self.rows,
             cols: rhs.cols,
             array,
