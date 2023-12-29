@@ -100,6 +100,29 @@ mod tests {
     }
 
     #[test]
+    fn matmul() {
+        let x = Matrix::new([[1., 2., 3.], [4., 5., 6.], [7., 8., 9.]]);
+        let y = Matrix::new([[9., 8., 7.], [6., 5., 4.], [3., 2., 1.]]);
+
+        assert_eq!(
+            &x * &y,
+            Matrix::new([[30., 24., 18.], [84., 69., 54.], [138., 114., 90.]])
+        );
+        assert_eq!(
+            x.clone() * &y,
+            Matrix::new([[30., 24., 18.], [84., 69., 54.], [138., 114., 90.]])
+        );
+        assert_eq!(
+            &x * y.clone(),
+            Matrix::new([[30., 24., 18.], [84., 69., 54.], [138., 114., 90.]])
+        );
+        assert_eq!(
+            x * y,
+            Matrix::new([[30., 24., 18.], [84., 69., 54.], [138., 114., 90.]])
+        );
+    }
+
+    #[test]
     fn sum() {
         let x = Matrix::new([[1., 2., 3.], [4., 5., 6.], [7., 8., 9.]]);
         assert_eq!(x.sum(Axis::ROW), Matrix::new_col_vector([6., 15., 24.]));
