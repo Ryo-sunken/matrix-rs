@@ -50,8 +50,7 @@ where
 
 impl<T> Mul<&Matrix<T>> for &Matrix<T>
 where
-    T: Mul<Output = T> + Copy,
-    <T as Mul>::Output: Add<Output = T>,
+    T: Mul<Output = T> + Add<Output = T> + Copy,
     Vec<T>: FromIterator<<T as Mul>::Output>,
 {
     type Output = Matrix<T>;
@@ -63,12 +62,12 @@ where
         for r in 0..self.rows {
             for c in 0..rhs.cols {
                 array.push(
-                    self.array[r * self.cols..(r + 1) * self.cols]
+                    self.array[(r * self.cols)..((r + 1) * self.cols)]
                         .iter()
                         .zip(0..self.cols)
                         .map(|(&s, oi)| s * rhs.array[oi * rhs.cols + c])
                         .reduce(|acc, cur| acc + cur)
-                        .unwrap()
+                        .unwrap(),
                 );
             }
         }
@@ -82,8 +81,7 @@ where
 }
 impl<T> Mul<&Matrix<T>> for Matrix<T>
 where
-    T: Mul<Output = T> + Copy,
-    <T as Mul>::Output: Add<Output = T>,
+    T: Mul<Output = T> + Add<Output = T> + Copy,
     Vec<T>: FromIterator<<T as Mul>::Output>,
 {
     type Output = Matrix<T>;
@@ -106,8 +104,7 @@ where
 }
 impl<T> Mul<Matrix<T>> for Matrix<T>
 where
-    T: Mul<Output = T> + Copy,
-    <T as Mul>::Output: Add<Output = T>,
+    T: Mul<Output = T> + Add<Output = T> + Copy,
     Vec<T>: FromIterator<<T as Mul>::Output>,
 {
     type Output = Matrix<T>;
