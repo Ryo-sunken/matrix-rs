@@ -1,6 +1,9 @@
 use crate::matrix::Matrix;
 use rayon::prelude::*;
-use std::ops::{Add, Div, Mul};
+use std::{
+    iter::Sum,
+    ops::{Add, Div, Mul},
+};
 
 impl<T> Matrix<T>
 where
@@ -50,13 +53,51 @@ where
 
 impl<T> Mul<&Matrix<T>> for &Matrix<T>
 where
-    T: Mul<Output = T> + Add<Output = T> + Copy,
-    Vec<T>: FromIterator<<T as Mul>::Output>,
+    T: Sum + Mul<Output = T> + Add<Output = T> + Copy + Send + Sync,
+    <T as Mul>::Output: Send + Sync,
+    Vec<T>: FromParallelIterator<<T as Mul>::Output>,
 {
     type Output = Matrix<T>;
 
     fn mul(self, rhs: &Matrix<T>) -> Self::Output {
         assert_eq!(self.cols, rhs.rows);
+
+        // row_vector * col_vector
+        if self.rows == 1 && rhs.cols == 1 {
+            return Self::Output {
+                rows: 1,
+                cols: 1,
+                array: vec![self
+                    .array
+                    .par_iter()
+                    .zip(rhs.array.par_iter())
+                    .map(|(&x, &y)| x * y)
+                    .sum()],
+            };
+        // row_vector * matrix
+        } else if self.rows == 1 {
+            return Self::Output {
+                rows: 1,
+                cols: rhs.cols,
+                array: self
+                    .transpose()
+                    .array
+                    .par_chunks(self.cols)
+                    .map(|s| s.iter().zip(rhs.array.iter()).map(|(&x, &y)| x * y).sum())
+                    .collect::<Vec<_>>(),
+            };
+        // matrix * col_vector
+        } else if rhs.cols == 1 {
+            return Self::Output {
+                rows: self.rows,
+                cols: 1,
+                array: self
+                    .array
+                    .par_chunks(self.rows)
+                    .map(|s| s.iter().zip(rhs.array.iter()).map(|(&x, &y)| x * y).sum())
+                    .collect::<Vec<_>>(),
+            };
+        }
 
         let mut array = Vec::with_capacity(self.rows * rhs.cols);
         for r in 0..self.rows {
@@ -81,8 +122,9 @@ where
 }
 impl<T> Mul<&Matrix<T>> for Matrix<T>
 where
-    T: Mul<Output = T> + Add<Output = T> + Copy,
-    Vec<T>: FromIterator<<T as Mul>::Output>,
+    T: Sum + for<'a> Sum<&'a T> + Mul<Output = T> + Add<Output = T> + Copy + Send + Sync,
+    <T as Mul>::Output: Send + Sync,
+    Vec<T>: FromParallelIterator<<T as Mul>::Output>,
 {
     type Output = Matrix<T>;
 
@@ -92,9 +134,9 @@ where
 }
 impl<T> Mul<Matrix<T>> for &Matrix<T>
 where
-    T: Mul<Output = T> + Copy,
-    <T as Mul>::Output: Add<Output = T>,
-    Vec<T>: FromIterator<<T as Mul>::Output>,
+    T: Sum + for<'a> Sum<&'a T> + Mul<Output = T> + Add<Output = T> + Copy + Send + Sync,
+    <T as Mul>::Output: Send + Sync,
+    Vec<T>: FromParallelIterator<<T as Mul>::Output>,
 {
     type Output = Matrix<T>;
 
@@ -104,8 +146,9 @@ where
 }
 impl<T> Mul<Matrix<T>> for Matrix<T>
 where
-    T: Mul<Output = T> + Add<Output = T> + Copy,
-    Vec<T>: FromIterator<<T as Mul>::Output>,
+    T: Sum + for<'a> Sum<&'a T> + Mul<Output = T> + Add<Output = T> + Copy + Send + Sync,
+    <T as Mul>::Output: Send + Sync,
+    Vec<T>: FromParallelIterator<<T as Mul>::Output>,
 {
     type Output = Matrix<T>;
 
