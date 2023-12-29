@@ -140,25 +140,37 @@ mod tests {
     #[test]
     fn sum() {
         let x = Matrix::new([[1., 2., 3.], [4., 5., 6.], [7., 8., 9.]]);
-        assert_eq!(x.sum(Axis::ROW), Matrix::new_col_vector([6., 15., 24.]));
-        assert_eq!(x.sum(Axis::COLUMN), Matrix::new_row_vector([12., 15., 18.]));
-        assert_eq!(x.sum(Axis::BOTH), Matrix::new([[45.]]));
+        assert_eq!(
+            x.sum(Some(Axis::ROW)),
+            Matrix::new_col_vector([6., 15., 24.])
+        );
+        assert_eq!(
+            x.sum(Some(Axis::COLUMN)),
+            Matrix::new_row_vector([12., 15., 18.])
+        );
+        assert_eq!(x.sum(None), Matrix::new([[45.]]));
     }
 
     #[test]
     fn max() {
         let x = Matrix::new([[1., 2., 3.], [4., 5., 6.], [7., 8., 9.]]);
-        assert_eq!(x.max(Axis::ROW), Matrix::new_col_vector([3., 6., 9.]));
-        assert_eq!(x.max(Axis::COLUMN), Matrix::new_row_vector([7., 8., 9.]));
-        assert_eq!(x.max(Axis::BOTH), Matrix::new([[9.]]));
+        assert_eq!(x.max(Some(Axis::ROW)), Matrix::new_col_vector([3., 6., 9.]));
+        assert_eq!(
+            x.max(Some(Axis::COLUMN)),
+            Matrix::new_row_vector([7., 8., 9.])
+        );
+        assert_eq!(x.max(None), Matrix::new([[9.]]));
     }
 
     #[test]
     fn min() {
         let x = Matrix::new([[1., 2., 3.], [4., 5., 6.], [7., 8., 9.]]);
-        assert_eq!(x.min(Axis::ROW), Matrix::new_col_vector([1., 4., 7.]));
-        assert_eq!(x.min(Axis::COLUMN), Matrix::new_row_vector([1., 2., 3.]));
-        assert_eq!(x.min(Axis::BOTH), Matrix::new([[1.]]));
+        assert_eq!(x.min(Some(Axis::ROW)), Matrix::new_col_vector([1., 4., 7.]));
+        assert_eq!(
+            x.min(Some(Axis::COLUMN)),
+            Matrix::new_row_vector([1., 2., 3.])
+        );
+        assert_eq!(x.min(None), Matrix::new([[1.]]));
     }
 
     #[test]
