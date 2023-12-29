@@ -6,26 +6,19 @@ impl<T> Matrix<T>
 where
     T: Sum + for<'a> Sum<&'a T> + Copy + Send + Sync,
 {
-    pub fn sum(&self, ax: Axis) -> Self {
+    fn sum_array(matrix: &Matrix<T>) -> Vec<T> {
+        matrix
+            .array
+            .par_chunks(matrix.cols)
+            .map(|s| s.iter().sum())
+            .collect::<Vec<_>>()
+    }
+
+    pub fn sum(&self, ax: Option<Axis>) -> Self {
         match ax {
-            Axis::ROW => {
-                let sum_array = self
-                    .array
-                    .par_chunks(self.cols)
-                    .map(|s| s.iter().sum())
-                    .collect::<Vec<T>>();
-                Self::from_vec_col(sum_array)
-            }
-            Axis::COLUMN => {
-                let sum_array = self
-                    .transpose()
-                    .array
-                    .par_chunks(self.rows)
-                    .map(|s| s.iter().sum())
-                    .collect::<Vec<T>>();
-                Self::from_vec_row(sum_array)
-            }
-            Axis::BOTH => Self::new([[self.array.par_iter().sum()]]),
+            Some(Axis::ROW) => Self::from_vec_col(Self::sum_array(self)),
+            Some(Axis::COLUMN) => Self::from_vec_row(Self::sum_array(&self.transpose())),
+            None => Self::new([[self.array.par_iter().sum()]]),
         }
     }
 }
