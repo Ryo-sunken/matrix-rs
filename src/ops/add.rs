@@ -4,9 +4,8 @@ use std::ops::{Add, AddAssign};
 
 impl<T> Add<&Matrix<T>> for &Matrix<T>
 where
-    T: Add + Copy + Send + Sync,
-    <T as Add>::Output: Send + Sync,
-    Vec<T>: FromParallelIterator<<T as Add>::Output>,
+    T: Add<Output = T> + Copy + Send + Sync,
+    Vec<T>: FromParallelIterator<T>,
 {
     type Output = Matrix<T>;
 
@@ -28,9 +27,8 @@ where
 }
 impl<T> Add<&Matrix<T>> for Matrix<T>
 where
-    T: Add + Copy + Send + Sync,
-    <T as Add>::Output: Send + Sync,
-    Vec<T>: FromParallelIterator<<T as Add>::Output>,
+    T: Add<Output = T> + Copy + Send + Sync,
+    Vec<T>: FromParallelIterator<T>,
 {
     type Output = Matrix<T>;
 
@@ -40,9 +38,8 @@ where
 }
 impl<T> Add<Matrix<T>> for &Matrix<T>
 where
-    T: Add + Copy + Send + Sync,
-    <T as Add>::Output: Send + Sync,
-    Vec<T>: FromParallelIterator<<T as Add>::Output>,
+    T: Add<Output = T> + Copy + Send + Sync,
+    Vec<T>: FromParallelIterator<T>,
 {
     type Output = Matrix<T>;
 
@@ -52,9 +49,8 @@ where
 }
 impl<T> Add<Matrix<T>> for Matrix<T>
 where
-    T: Add + Copy + Send + Sync,
-    <T as Add>::Output: Send + Sync,
-    Vec<T>: FromParallelIterator<<T as Add>::Output>,
+    T: Add<Output = T> + Copy + Send + Sync,
+    Vec<T>: FromParallelIterator<T>,
 {
     type Output = Matrix<T>;
 
@@ -65,9 +61,8 @@ where
 
 impl<T> AddAssign<&Matrix<T>> for Matrix<T>
 where
-    T: Add + Copy + Send + Sync,
-    <T as Add>::Output: Send + Sync,
-    Vec<T>: FromParallelIterator<<T as Add>::Output>,
+    T: Add<Output = T> + Copy + Send + Sync,
+    Vec<T>: FromParallelIterator<T>,
 {
     fn add_assign(&mut self, rhs: &Matrix<T>) {
         assert_eq!(self.rows, rhs.rows);
@@ -83,9 +78,8 @@ where
 }
 impl<T> AddAssign<Matrix<T>> for Matrix<T>
 where
-    T: Add + Copy + Send + Sync,
-    <T as Add>::Output: Send + Sync,
-    Vec<T>: FromParallelIterator<<T as Add>::Output>,
+    T: Add<Output = T> + Copy + Send + Sync,
+    Vec<T>: FromParallelIterator<T>,
 {
     fn add_assign(&mut self, rhs: Matrix<T>) {
         *self += &rhs;

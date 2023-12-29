@@ -54,8 +54,7 @@ where
 impl<T> Mul<&Matrix<T>> for &Matrix<T>
 where
     T: Sum + Mul<Output = T> + Add<Output = T> + Copy + Send + Sync,
-    <T as Mul>::Output: Send + Sync,
-    Vec<T>: FromParallelIterator<<T as Mul>::Output>,
+    Vec<T>: FromParallelIterator<T>,
 {
     type Output = Matrix<T>;
 
@@ -136,9 +135,8 @@ where
 }
 impl<T> Mul<&Matrix<T>> for Matrix<T>
 where
-    T: Sum + for<'a> Sum<&'a T> + Mul<Output = T> + Add<Output = T> + Copy + Send + Sync,
-    <T as Mul>::Output: Send + Sync,
-    Vec<T>: FromParallelIterator<<T as Mul>::Output>,
+    T: Sum + Mul<Output = T> + Add<Output = T> + Copy + Send + Sync,
+    Vec<T>: FromParallelIterator<T>,
 {
     type Output = Matrix<T>;
 
@@ -148,9 +146,8 @@ where
 }
 impl<T> Mul<Matrix<T>> for &Matrix<T>
 where
-    T: Sum + for<'a> Sum<&'a T> + Mul<Output = T> + Add<Output = T> + Copy + Send + Sync,
-    <T as Mul>::Output: Send + Sync,
-    Vec<T>: FromParallelIterator<<T as Mul>::Output>,
+    T: Sum + Mul<Output = T> + Add<Output = T> + Copy + Send + Sync,
+    Vec<T>: FromParallelIterator<T>,
 {
     type Output = Matrix<T>;
 
@@ -160,9 +157,8 @@ where
 }
 impl<T> Mul<Matrix<T>> for Matrix<T>
 where
-    T: Sum + for<'a> Sum<&'a T> + Mul<Output = T> + Add<Output = T> + Copy + Send + Sync,
-    <T as Mul>::Output: Send + Sync,
-    Vec<T>: FromParallelIterator<<T as Mul>::Output>,
+    T: Sum + Mul<Output = T> + Add<Output = T> + Copy + Send + Sync,
+    Vec<T>: FromParallelIterator<T>,
 {
     type Output = Matrix<T>;
 
