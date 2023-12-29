@@ -1,7 +1,6 @@
 pub mod matrix;
 pub mod ops;
 pub mod rand;
-pub mod vector;
 
 #[cfg(test)]
 mod tests {
@@ -135,6 +134,11 @@ mod tests {
                 [5., 10., 15., 20., 25.]
             ])
         );
+
+        let x = Matrix::new([[1., 2., 3.], [4., 5., 6.], [7., 8., 9.]]);
+        let y = Matrix::new([[1., 2., 3.]]).transpose();
+        assert_eq!(&x * &y, Matrix::new([[14., 32., 50.]]).transpose());
+        assert_eq!(y.transpose() * &x, Matrix::new([[14.,32.,50.]]));
     }
 
     #[test]
