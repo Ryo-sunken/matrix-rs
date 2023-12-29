@@ -18,7 +18,7 @@ pub enum Axis {
 
 impl<T> Matrix<T> {
     pub fn new<const R: usize, const C: usize>(data: [[T; C]; R]) -> Self {
-        assert!(R != 0 && C != 0, "Rows or columns cannot be set to zero.");
+        assert!(R != 0 && C != 0, "Rows and columns cannot be set to zero.");
         Self {
             rows: R,
             cols: C,
@@ -45,7 +45,8 @@ impl<T> Matrix<T> {
     }
 
     pub fn from_vec(array: Vec<T>, rows: usize, cols: usize) -> Self {
-        assert!(!array.is_empty(), "Array cannot be empty.");
+        assert!(rows != 0 && cols != 0, "Rows and columns cannot be set to zero.");
+        assert_eq!(array.len(), rows * cols, "The array length must be equal the matrix size.");
         Self { rows, cols, array }
     }
 
