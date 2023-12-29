@@ -68,18 +68,18 @@ impl<T> Matrix<T> {
         self.cols
     }
 
-    pub fn get_ref(&self, r: usize, c: usize) -> Option<&T> {
-        if self.rows <= r || self.cols <= c {
+    pub fn get_ref(&self, row: usize, col: usize) -> Option<&T> {
+        if self.rows <= row || self.cols <= col {
             return None;
         }
-        self.array.get(r * self.cols + c)
+        self.array.get(row * self.cols + col)
     }
 
-    pub fn get_mut(&mut self, r: usize, c: usize) -> Option<&mut T> {
-        if self.rows <= r || self.cols <= c {
+    pub fn get_mut(&mut self, row: usize, col: usize) -> Option<&mut T> {
+        if self.rows <= row || self.cols <= col {
             return None;
         }
-        self.array.get_mut(r * self.cols + c)
+        self.array.get_mut(row * self.cols + col)
     }
 
     pub fn is_scalar(&self) -> bool {
@@ -159,6 +159,9 @@ where
     T: PartialEq + Send + Sync,
 {
     fn eq(&self, other: &Self) -> bool {
+        if self.rows != other.rows || self.cols != other.cols {
+            return false;
+        }
         self.array
             .par_iter()
             .zip(other.array.par_iter())
