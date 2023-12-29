@@ -138,7 +138,7 @@ mod tests {
         let x = Matrix::new([[1., 2., 3.], [4., 5., 6.], [7., 8., 9.]]);
         let y = Matrix::new([[1., 2., 3.]]).transpose();
         assert_eq!(&x * &y, Matrix::new([[14., 32., 50.]]).transpose());
-        assert_eq!(y.transpose() * &x, Matrix::new([[14.,32.,50.]]));
+        assert_eq!(y.transpose() * &x, Matrix::new([[14., 32., 50.]]));
     }
 
     #[test]
