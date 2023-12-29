@@ -1,5 +1,4 @@
 use crate::matrix::Matrix;
-use num_traits::identities::Zero;
 use rayon::prelude::*;
 use std::ops::{Add, Div, Mul};
 
@@ -51,7 +50,8 @@ where
 
 impl<T> Mul<&Matrix<T>> for &Matrix<T>
 where
-    T: Mul + Add<<T as Mul>::Output, Output = T> + Zero + Copy,
+    T: Mul<Output = T> + Copy,
+    <T as Mul>::Output: Add<Output = T>,
     Vec<T>: FromIterator<<T as Mul>::Output>,
 {
     type Output = Matrix<T>;
@@ -67,7 +67,8 @@ where
                         .iter()
                         .zip(0..self.cols)
                         .map(|(&s, oi)| s * rhs.array[oi * rhs.cols + c])
-                        .fold(T::zero(), |acc, cur| acc + cur),
+                        .reduce(|acc, cur| acc + cur)
+                        .unwrap()
                 );
             }
         }
@@ -81,7 +82,8 @@ where
 }
 impl<T> Mul<&Matrix<T>> for Matrix<T>
 where
-    T: Mul + Add<<T as Mul>::Output, Output = T> + Zero + Copy,
+    T: Mul<Output = T> + Copy,
+    <T as Mul>::Output: Add<Output = T>,
     Vec<T>: FromIterator<<T as Mul>::Output>,
 {
     type Output = Matrix<T>;
@@ -92,7 +94,8 @@ where
 }
 impl<T> Mul<Matrix<T>> for &Matrix<T>
 where
-    T: Mul + Add<<T as Mul>::Output, Output = T> + Zero + Copy,
+    T: Mul<Output = T> + Copy,
+    <T as Mul>::Output: Add<Output = T>,
     Vec<T>: FromIterator<<T as Mul>::Output>,
 {
     type Output = Matrix<T>;
@@ -103,7 +106,8 @@ where
 }
 impl<T> Mul<Matrix<T>> for Matrix<T>
 where
-    T: Mul + Add<<T as Mul>::Output, Output = T> + Zero + Copy,
+    T: Mul<Output = T> + Copy,
+    <T as Mul>::Output: Add<Output = T>,
     Vec<T>: FromIterator<<T as Mul>::Output>,
 {
     type Output = Matrix<T>;
