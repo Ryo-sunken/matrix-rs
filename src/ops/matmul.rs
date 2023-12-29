@@ -125,13 +125,14 @@ where
             .flatten()
             .collect::<Vec<_>>();
 
-        Self::Output {
+        let mut ret = Self::Output {
             rows: self.cols,
             cols: self.rows * rhs.cols,
             array,
         }
-        .sum(Some(Axis::COLUMN))
-        .as_shape(self.rows, rhs.cols)
+        .sum(Some(Axis::COLUMN));
+        ret.reshape(self.rows, rhs.cols);
+        ret
     }
 }
 impl<T> Mul<&Matrix<T>> for Matrix<T>
