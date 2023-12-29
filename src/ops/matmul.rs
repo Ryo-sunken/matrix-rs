@@ -99,6 +99,20 @@ where
             };
         }
 
+        // col_vector * row_vector
+        if self.cols == 1 {
+            return Self::Output {
+                rows: self.rows,
+                cols: rhs.cols,
+                array: self
+                    .array
+                    .par_iter()
+                    .map(|&x| rhs.array.par_iter().map(move |&y| x * y))
+                    .flatten()
+                    .collect::<Vec<_>>(),
+            };
+        }
+
         let mut array = Vec::with_capacity(self.rows * rhs.cols);
         for r in 0..self.rows {
             for c in 0..rhs.cols {
