@@ -3,36 +3,31 @@ pub mod ops;
 pub mod rand;
 
 #[cfg(test)]
-mod tests 
-{
+mod tests {
     #[allow(unused_imports)]
     use crate::matrix::{Matrix, Axis};
 
     #[test]
-    fn reshape()
-    {
+    fn reshape() {
         let mut x = Matrix::new([[1.,2.,3.],[4.,5.,6.],[7.,8.,9.]]);
         x.reshape(1, 9);
         assert_eq!(x, Matrix::new_row_vector([1.,2.,3.,4.,5.,6.,7.,8.,9.]));
     }
 
     #[test]
-    fn transpose()
-    {
+    fn transpose() {
         let x = Matrix::new([[1.,2.,3.],[4.,5.,6.],[7.,8.,9.]]);
         assert_eq!(x.transpose(), Matrix::new([[1.,4.,7.],[2.,5.,8.],[3.,6.,9.]]));
     }
 
     #[test]
-    fn neg()
-    {
+    fn neg() {
         let x = Matrix::new([[1.,2.,3.],[4.,5.,6.],[7.,8.,9.]]);
         assert_eq!(-x, Matrix::new([[-1.,-2.,-3.],[-4.,-5.,-6.],[-7.,-8.,-9.]]));
     }
 
     #[test]
-    fn add() 
-    {
+    fn add() {
         let x = Matrix::new([[1.,2.,3.],[4.,5.,6.],[7.,8.,9.]]);
         let y = Matrix::new([[9.,8.,7.],[6.,5.,4.],[3.,2.,1.]]);
         assert_eq!(&x        + &y,        Matrix::new([[10.,10.,10.],[10.,10.,10.],[10.,10.,10.]]));
@@ -42,8 +37,7 @@ mod tests
     }
 
     #[test]
-    fn sub()
-    {
+    fn sub() {
         let x = Matrix::new([[1.,2.,3.],[4.,5.,6.],[7.,8.,9.]]);
         let y = Matrix::new([[9.,8.,7.],[6.,5.,4.],[3.,2.,1.]]);
         assert_eq!(&x        - &y,        Matrix::new([[-8.,-6.,-4.],[-2.,0.,2.],[4.,6.,8.]]));
@@ -53,24 +47,21 @@ mod tests
     }
 
     #[test]
-    fn cwise_mul()
-    {
+    fn cwise_mul() {
         let x = Matrix::new([[1.,2.,3.],[4.,5.,6.],[7.,8.,9.]]);
         let y = Matrix::new([[9.,8.,7.],[6.,5.,4.],[3.,2.,1.]]);
         assert_eq!(x.cwise_mul(&y), Matrix::new([[9.,16.,21.],[24.,25.,24.],[21.,16.,9.]]));
     }
 
     #[test]
-    fn cwise_div()
-    {
+    fn cwise_div() {
         let x = Matrix::new([[1.,2.,3.],[4.,5.,6.],[7.,8.,9.]]);
         let y = Matrix::new([[1.,2.,3.],[4.,5.,6.],[7.,8.,9.]]);
         assert_eq!(x.cwise_div(&y), Matrix::new([[1.,1.,1.],[1.,1.,1.],[1.,1.,1.]]));
     }
 
     #[test]
-    fn sum()
-    {
+    fn sum() {
         let x = Matrix::new([[1.,2.,3.,],[4.,5.,6.],[7.,8.,9.]]);
         assert_eq!(x.sum(Axis::ROW),    Matrix::new_col_vector([6.,15.,24.]));
         assert_eq!(x.sum(Axis::COLUMN), Matrix::new_row_vector([12.,15.,18.]));
@@ -78,8 +69,7 @@ mod tests
     }
 
     #[test]
-    fn max()
-    {
+    fn max() {
         let x = Matrix::new([[1.,2.,3.,],[4.,5.,6.],[7.,8.,9.]]);
         assert_eq!(x.max(Axis::ROW),    Matrix::new_col_vector([3.,6.,9.]));
         assert_eq!(x.max(Axis::COLUMN), Matrix::new_row_vector([7.,8.,9.]));
@@ -87,8 +77,7 @@ mod tests
     }
 
     #[test]
-    fn min()
-    {
+    fn min() {
         let x = Matrix::new([[1.,2.,3.,],[4.,5.,6.],[7.,8.,9.]]);
         assert_eq!(x.min(Axis::ROW),    Matrix::new_col_vector([1.,4.,7.]));
         assert_eq!(x.min(Axis::COLUMN), Matrix::new_row_vector([1.,2.,3.]));
@@ -96,8 +85,7 @@ mod tests
     }
 
     #[test]
-    fn index()
-    {
+    fn index() {
         let x = Matrix::new([[1.,2.,3.,],[4.,5.,6.],[7.,8.,9.]]);
         assert_eq!(x[0][0], 1.);
         assert_eq!(x[2][2], 9.);
