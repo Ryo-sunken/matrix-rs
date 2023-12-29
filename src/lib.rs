@@ -101,24 +101,24 @@ mod tests {
 
     #[test]
     fn matmul() {
-        let x = Matrix::new([[1., 2., 3.], [4., 5., 6.], [7., 8., 9.]]);
-        let y = Matrix::new([[9., 8., 7.], [6., 5., 4.], [3., 2., 1.]]);
+        let x = Matrix::new([[1., 2., 3.], [4., 5., 6.]]);
+        let y = Matrix::new([[1., 2., 3., 4.], [5., 6., 7., 8.], [9., 10., 11., 12.]]);
 
         assert_eq!(
             &x * &y,
-            Matrix::new([[30., 24., 18.], [84., 69., 54.], [138., 114., 90.]])
+            Matrix::new([[38., 44., 50., 56.], [83., 98., 113., 128.]])
         );
         assert_eq!(
             x.clone() * &y,
-            Matrix::new([[30., 24., 18.], [84., 69., 54.], [138., 114., 90.]])
+            Matrix::new([[38., 44., 50., 56.], [83., 98., 113., 128.]])
         );
         assert_eq!(
             &x * y.clone(),
-            Matrix::new([[30., 24., 18.], [84., 69., 54.], [138., 114., 90.]])
+            Matrix::new([[38., 44., 50., 56.], [83., 98., 113., 128.]])
         );
         assert_eq!(
             x * y,
-            Matrix::new([[30., 24., 18.], [84., 69., 54.], [138., 114., 90.]])
+            Matrix::new([[38., 44., 50., 56.], [83., 98., 113., 128.]])
         );
 
         let x = Matrix::new([[1., 2., 3., 4., 5.]]);
@@ -143,16 +143,16 @@ mod tests {
 
     #[test]
     fn sum() {
-        let x = Matrix::new([[1., 2., 3.], [4., 5., 6.], [7., 8., 9.]]);
+        let x = Matrix::new([[1., 2., 3., 4.], [5., 6., 7., 8.], [9., 10., 11., 12.]]);
         assert_eq!(
             x.sum(Some(Axis::ROW)),
-            Matrix::new_col_vector([6., 15., 24.])
+            Matrix::new_col_vector([10., 26., 42.])
         );
         assert_eq!(
             x.sum(Some(Axis::COLUMN)),
-            Matrix::new_row_vector([12., 15., 18.])
+            Matrix::new_row_vector([15., 18., 21., 24.])
         );
-        assert_eq!(x.sum(None), Matrix::new([[45.]]));
+        assert_eq!(x.sum(None), Matrix::new([[78.]]));
     }
 
     #[test]
