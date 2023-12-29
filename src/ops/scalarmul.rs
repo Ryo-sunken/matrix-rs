@@ -34,7 +34,7 @@ macro_rules! defscalarmul {
 
 impl<T> Neg for &Matrix<T>
 where
-    T: Neg<Outout = T> + Copy + Send + Sync,
+    T: Neg<Output = T> + Copy + Send + Sync,
     Vec<T>: FromParallelIterator<T>,
 {
     type Output = Matrix<T>;
@@ -49,7 +49,7 @@ where
 }
 impl<T> Neg for Matrix<T>
 where
-    T: Neg<Outout = T> + Copy + Send + Sync,
+    T: Neg<Output = T> + Copy + Send + Sync,
     Vec<T>: FromParallelIterator<T>,
 {
     type Output = Matrix<T>;
