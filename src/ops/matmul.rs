@@ -59,14 +59,16 @@ where
     fn mul(self, rhs: &Matrix<T>) -> Self::Output {
         assert_eq!(self.cols, rhs.rows);
 
-        let mut array = vec![T::zero(); self.rows * rhs.cols];
+        let mut array = Vec::with_capacity(self.rows * rhs.cols);
         for r in 0..self.rows {
             for c in 0..rhs.cols {
-                array[r * rhs.cols + c] = self.array[r * self.cols..(r + 1) * self.cols]
-                    .iter()
-                    .zip(0..self.cols)
-                    .map(|(&s, oi)| s * rhs.array[oi * rhs.cols + c])
-                    .fold(T::zero(), |acc, cur| acc + cur);
+                array.push(
+                    self.array[r * self.cols..(r + 1) * self.cols]
+                        .iter()
+                        .zip(0..self.cols)
+                        .map(|(&s, oi)| s * rhs.array[oi * rhs.cols + c])
+                        .fold(T::zero(), |acc, cur| acc + cur),
+                );
             }
         }
 
