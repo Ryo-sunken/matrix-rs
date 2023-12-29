@@ -45,8 +45,15 @@ impl<T> Matrix<T> {
     }
 
     pub fn from_vec(array: Vec<T>, rows: usize, cols: usize) -> Self {
-        assert!(rows != 0 && cols != 0, "Rows and columns cannot be set to zero.");
-        assert_eq!(array.len(), rows * cols, "The array length must be equal the matrix size.");
+        assert!(
+            rows != 0 && cols != 0,
+            "Rows and columns cannot be set to zero."
+        );
+        assert_eq!(
+            array.len(),
+            rows * cols,
+            "The array length must be equal the matrix size."
+        );
         Self { rows, cols, array }
     }
 
@@ -117,7 +124,7 @@ where
     }
 
     pub fn from_slice<const C: usize>(data: &[[T; C]]) -> Self {
-        assert!(data.len() != 0, "Rows cannot be set to zero.");
+        assert!(!data.is_empty(), "Rows cannot be set to zero.");
         assert!(C != 0, "Columns cannot be set to zero.");
         Self {
             rows: data.len(),
@@ -139,6 +146,26 @@ where
     }
 
     pub fn transpose(&self) -> Self {
+        // scalar
+        if self.rows == 1 && self.cols == 1 {
+            return self.clone();
+        // row_vector
+        } else if self.rows == 1 {
+            return Self {
+                rows: self.cols,
+                cols: 1,
+                array: self.array.clone(),
+            };
+        // col_vector
+        } else if self.cols == 1 {
+            return Self {
+                rows: 1,
+                cols: self.rows,
+                array: self.array.clone(),
+            };
+        }
+
+        // matrix
         let mut array = Vec::with_capacity(self.rows * self.cols);
         for c in 0..self.cols {
             for r in 0..self.rows {
