@@ -31,11 +31,11 @@ where
             .collect::<Vec<_>>()
     }
 
-    pub fn max(&self, ax: Axis) -> Self {
+    pub fn max(&self, ax: Option<Axis>) -> Self {
         match ax {
-            Axis::ROW => Self::from_vec_col(Self::max_array(self)),
-            Axis::COLUMN => Self::from_vec_row(Self::max_array(&self.transpose())),
-            Axis::BOTH => Self::new([[Self::max_array(self)
+            Some(Axis::ROW) => Self::from_vec_col(Self::max_array(self)),
+            Some(Axis::COLUMN) => Self::from_vec_row(Self::max_array(&self.transpose())),
+            None => Self::new([[Self::max_array(self)
                 .iter()
                 .reduce(|x, y| if x > y { x } else { y })
                 .unwrap()
@@ -43,11 +43,11 @@ where
         }
     }
 
-    pub fn min(&self, ax: Axis) -> Self {
+    pub fn min(&self, ax: Option<Axis>) -> Self {
         match ax {
-            Axis::ROW => Self::from_vec_col(Self::min_array(self)),
-            Axis::COLUMN => Self::from_vec_row(Self::min_array(&self.transpose())),
-            Axis::BOTH => Self::new([[Self::min_array(self)
+            Some(Axis::ROW) => Self::from_vec_col(Self::min_array(self)),
+            Some(Axis::COLUMN) => Self::from_vec_row(Self::min_array(&self.transpose())),
+            None => Self::new([[Self::min_array(self)
                 .iter()
                 .reduce(|x, y| if x > y { y } else { x })
                 .unwrap()

@@ -14,7 +14,6 @@ pub struct Matrix<T> {
 pub enum Axis {
     ROW,
     COLUMN,
-    BOTH,
 }
 
 impl<T> Matrix<T> {
