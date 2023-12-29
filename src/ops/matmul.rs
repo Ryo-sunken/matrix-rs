@@ -1,4 +1,4 @@
-use crate::matrix::Matrix;
+use crate::matrix::{Axis, Matrix};
 use rayon::prelude::*;
 use std::{
     iter::Sum,
@@ -103,34 +103,35 @@ where
             return Self::Output {
                 rows: self.rows,
                 cols: rhs.cols,
-                array: self
+                array: rhs
                     .array
                     .par_iter()
-                    .map(|&x| rhs.array.par_iter().map(move |&y| x * y))
+                    .map(|&x| self.array.par_iter().map(move |&y| x * y))
                     .flatten()
                     .collect::<Vec<_>>(),
             };
         }
 
-        let mut array = Vec::with_capacity(self.rows * rhs.cols);
-        for r in 0..self.rows {
-            for c in 0..rhs.cols {
-                array.push(
-                    self.array[(r * self.cols)..((r + 1) * self.cols)]
-                        .iter()
-                        .zip(0..self.cols)
-                        .map(|(&s, oi)| s * rhs.array[oi * rhs.cols + c])
-                        .reduce(|acc, cur| acc + cur)
-                        .unwrap(),
-                );
-            }
-        }
+        let array = self
+            .transpose()
+            .array
+            .par_chunks(self.rows)
+            .zip(rhs.array.par_chunks(rhs.cols))
+            .map(|(s, t)| {
+                s.par_iter()
+                    .map(|&x| t.par_iter().map(move |&y| x * y))
+                    .flatten()
+            })
+            .flatten()
+            .collect::<Vec<_>>();
 
         Self::Output {
-            rows: self.rows,
-            cols: rhs.cols,
+            rows: self.cols,
+            cols: self.rows * rhs.cols,
             array,
         }
+        .sum(Some(Axis::COLUMN))
+        .as_shape(self.rows, rhs.cols)
     }
 }
 impl<T> Mul<&Matrix<T>> for Matrix<T>
