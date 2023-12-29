@@ -4,13 +4,13 @@ use std::iter::Sum;
 
 impl<T> Matrix<T>
 where
-    T: Sum + for<'a> Sum<&'a T> + Copy + Send + Sync,
+    T: Sum + Copy + Send + Sync,
 {
     fn sum_array(matrix: &Matrix<T>) -> Vec<T> {
         matrix
             .array
             .par_chunks(matrix.cols)
-            .map(|s| s.iter().sum())
+            .map(|s| s.iter().copied().sum())
             .collect::<Vec<_>>()
     }
 
@@ -18,7 +18,7 @@ where
         match ax {
             Some(Axis::ROW) => Self::from_vec_col(Self::sum_array(self)),
             Some(Axis::COLUMN) => Self::from_vec_row(Self::sum_array(&self.transpose())),
-            None => Self::new([[self.array.par_iter().sum()]]),
+            None => Self::new([[self.array.par_iter().copied().sum()]]),
         }
     }
 }
