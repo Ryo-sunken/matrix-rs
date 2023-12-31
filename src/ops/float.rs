@@ -1,16 +1,12 @@
 use crate::matrix::Matrix;
 use num_traits::Float;
-use rayon::prelude::*;
 
-impl<T> Matrix<T>
-where
-    T: Float + Send + Sync,
-{
+impl<T: Float> Matrix<T> {
     pub fn exp(&self) -> Self {
         Self {
             rows: self.rows,
             cols: self.cols,
-            array: self.array.par_iter().map(|&x| x.exp()).collect(),
+            array: self.array.iter().map(|&x| x.exp()).collect(),
         }
     }
 
@@ -18,7 +14,7 @@ where
         Self {
             rows: self.rows,
             cols: self.cols,
-            array: self.array.par_iter().map(|&x| x.sin()).collect(),
+            array: self.array.iter().map(|&x| x.sin()).collect(),
         }
     }
 
@@ -26,7 +22,7 @@ where
         Self {
             rows: self.rows,
             cols: self.cols,
-            array: self.array.par_iter().map(|&x| x.cos()).collect(),
+            array: self.array.iter().map(|&x| x.cos()).collect(),
         }
     }
 
@@ -34,7 +30,7 @@ where
         Self {
             rows: self.rows,
             cols: self.cols,
-            array: self.array.par_iter().map(|&x| x.sqrt()).collect(),
+            array: self.array.iter().map(|&x| x.sqrt()).collect(),
         }
     }
 
@@ -42,7 +38,7 @@ where
         Self {
             rows: self.rows,
             cols: self.cols,
-            array: self.array.par_iter().map(|&x| x.powf(n)).collect(),
+            array: self.array.iter().map(|&x| x.powf(n)).collect(),
         }
     }
 }
