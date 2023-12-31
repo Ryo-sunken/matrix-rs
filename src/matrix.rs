@@ -1,5 +1,3 @@
-use rayon::prelude::*;
-
 use std::cmp::PartialEq;
 
 #[derive(Clone, Debug)]
@@ -190,8 +188,8 @@ where
             return false;
         }
         self.array
-            .par_iter()
-            .zip(other.array.par_iter())
+            .iter()
+            .zip(other.array.iter())
             .all(|(x, y)| x == y)
     }
 }
