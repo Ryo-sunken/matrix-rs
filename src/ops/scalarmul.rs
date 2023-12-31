@@ -1,5 +1,4 @@
 use crate::matrix::Matrix;
-use rayon::prelude::*;
 use std::ops::{Div, DivAssign, Mul, MulAssign, Neg};
 
 macro_rules! defscalarmul {
@@ -15,7 +14,7 @@ macro_rules! defscalarmul {
                     {
                         rows: rhs.rows,
                         cols: rhs.cols,
-                        array: rhs.array.par_iter().map(|&x| x * self).collect(),
+                        array: rhs.array.iter().map(|&x| x * self).collect(),
                     }
                 }
             }
@@ -34,8 +33,7 @@ macro_rules! defscalarmul {
 
 impl<T> Neg for &Matrix<T>
 where
-    T: Neg<Output = T> + Copy + Send + Sync,
-    Vec<T>: FromParallelIterator<T>,
+    T: Neg<Output = T> + Copy,
 {
     type Output = Matrix<T>;
 
@@ -43,14 +41,13 @@ where
         Self::Output {
             rows: self.rows,
             cols: self.cols,
-            array: self.array.par_iter().map(|&x| -x).collect(),
+            array: self.array.iter().map(|&x| -x).collect(),
         }
     }
 }
 impl<T> Neg for Matrix<T>
 where
-    T: Neg<Output = T> + Copy + Send + Sync,
-    Vec<T>: FromParallelIterator<T>,
+    T: Neg<Output = T> + Copy,
 {
     type Output = Matrix<T>;
 
@@ -63,8 +60,7 @@ defscalarmul![i8, i16, i32, i64, isize, u8, u16, u32, u64, usize, f32, f64];
 
 impl<T> Mul<T> for &Matrix<T>
 where
-    T: Mul<Output = T> + Copy + Send + Sync,
-    Vec<T>: FromParallelIterator<T>,
+    T: Mul<Output = T> + Copy,
 {
     type Output = Matrix<T>;
 
@@ -72,14 +68,13 @@ where
         Self::Output {
             rows: self.rows,
             cols: self.cols,
-            array: self.array.par_iter().map(|&x| x * rhs).collect(),
+            array: self.array.iter().map(|&x| x * rhs).collect(),
         }
     }
 }
 impl<T> Mul<T> for Matrix<T>
 where
-    T: Mul<Output = T> + Copy + Send + Sync,
-    Vec<T>: FromParallelIterator<T>,
+    T: Mul<Output = T> + Copy,
 {
     type Output = Matrix<T>;
 
@@ -90,18 +85,16 @@ where
 
 impl<T> MulAssign<T> for Matrix<T>
 where
-    T: Mul<Output = T> + Copy + Send + Sync,
-    Vec<T>: FromParallelIterator<T>,
+    T: Mul<Output = T> + Copy,
 {
     fn mul_assign(&mut self, rhs: T) {
-        self.array = self.array.par_iter().map(|&x| x * rhs).collect();
+        self.array = self.array.iter().map(|&x| x * rhs).collect();
     }
 }
 
 impl<T> Div<T> for &Matrix<T>
 where
-    T: Div<Output = T> + Copy + Send + Sync,
-    Vec<T>: FromParallelIterator<T>,
+    T: Div<Output = T> + Copy,
 {
     type Output = Matrix<T>;
 
@@ -109,14 +102,13 @@ where
         Self::Output {
             rows: self.rows,
             cols: self.cols,
-            array: self.array.par_iter().map(|&x| x / rhs).collect(),
+            array: self.array.iter().map(|&x| x / rhs).collect(),
         }
     }
 }
 impl<T> Div<T> for Matrix<T>
 where
-    T: Div<Output = T> + Copy + Send + Sync,
-    Vec<T>: FromParallelIterator<T>,
+    T: Div<Output = T> + Copy,
 {
     type Output = Matrix<T>;
 
@@ -127,10 +119,9 @@ where
 
 impl<T> DivAssign<T> for Matrix<T>
 where
-    T: Div<Output = T> + Copy + Send + Sync,
-    Vec<T>: FromParallelIterator<T>,
+    T: Div<Output = T> + Copy,
 {
     fn div_assign(&mut self, rhs: T) {
-        self.array = self.array.par_iter().map(|&x| x / rhs).collect()
+        self.array = self.array.iter().map(|&x| x / rhs).collect()
     }
 }
