@@ -1,14 +1,13 @@
 use crate::matrix::{Axis, Matrix};
-use rayon::prelude::*;
 
 impl<T> Matrix<T>
 where
-    T: PartialOrd + Clone + Send + Sync,
+    T: PartialOrd + Clone,
 {
     fn max_array(matrix: &Matrix<T>) -> Vec<T> {
         matrix
             .array
-            .par_chunks(matrix.cols)
+            .chunks(matrix.cols)
             .map(|s| {
                 s.iter()
                     .reduce(|x, y| if x > y { x } else { y })
@@ -21,7 +20,7 @@ where
     fn min_array(matrix: &Matrix<T>) -> Vec<T> {
         matrix
             .array
-            .par_chunks(matrix.cols)
+            .chunks(matrix.cols)
             .map(|s| {
                 s.iter()
                     .reduce(|x, y| if x > y { y } else { x })
