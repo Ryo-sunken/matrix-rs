@@ -8,7 +8,7 @@ pub struct Matrix<T> {
 }
 
 #[allow(dead_code)]
-#[derive(Clone, Copy, Debug)]
+#[derive(Clone, Copy, Debug, PartialEq)]
 pub enum Axis {
     ROW,
     COLUMN,
