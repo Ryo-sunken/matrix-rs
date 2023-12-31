@@ -13,30 +13,15 @@ where
         assert_eq!(self.rows, rhs.rows);
         assert_eq!(self.cols, rhs.cols);
 
-        if self.rows * self.cols >= 200_000 {
-            let array = self
-                .array
-                .par_iter()
-                .zip(rhs.array.par_iter())
-                .map(|(&x, &y)| x + y)
-                .collect::<Vec<_>>();
-            return Self::Output {
-                rows: self.rows,
-                cols: self.cols,
-                array,
-            };
-        } else {
-            let array = self
-                .array
-                .iter()
-                .zip(rhs.array.iter())
-                .map(|(&x, &y)| x + y)
-                .collect::<Vec<_>>();
-            return Self::Output {
-                rows: self.rows,
-                cols: self.cols,
-                array,
-            };
+        Self::Output {
+            rows: self.rows,
+            cols: self.cols,
+            array: self
+            .array
+            .iter()
+            .zip(rhs.array.iter())
+            .map(|(&x, &y)| x + y)
+            .collect(),
         }
     }
 }
