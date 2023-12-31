@@ -1,4 +1,4 @@
-use crate::matrix::{Axis, Matrix};
+use crate::matrix::Matrix;
 use rayon::prelude::*;
 use std::{
     iter::Sum,
@@ -68,8 +68,8 @@ where
                 cols: 1,
                 array: vec![self
                     .array
-                    .par_iter()
-                    .zip(rhs.array.par_iter())
+                    .iter()
+                    .zip(rhs.array.iter())
                     .map(|(&x, &y)| x * y)
                     .sum()],
             };
@@ -81,7 +81,7 @@ where
                 array: self
                     .transpose()
                     .array
-                    .par_chunks(self.cols)
+                    .chunks(self.cols)
                     .map(|s| s.iter().zip(rhs.array.iter()).map(|(&x, &y)| x * y).sum())
                     .collect::<Vec<_>>(),
             };
@@ -92,7 +92,7 @@ where
                 cols: 1,
                 array: self
                     .array
-                    .par_chunks(self.rows)
+                    .chunks(self.rows)
                     .map(|s| s.iter().zip(rhs.array.iter()).map(|(&x, &y)| x * y).sum())
                     .collect::<Vec<_>>(),
             };
@@ -105,34 +105,31 @@ where
                 cols: rhs.cols,
                 array: rhs
                     .array
-                    .par_iter()
-                    .map(|&x| self.array.par_iter().map(move |&y| x * y))
+                    .iter()
+                    .map(|&x| self.array.iter().map(move |&y| x * y))
                     .flatten()
-                    .collect::<Vec<_>>(),
+                    .collect(),
             };
         }
 
-        let array = self
-            .transpose()
-            .array
-            .par_chunks(self.rows)
-            .zip(rhs.array.par_chunks(rhs.cols))
-            .map(|(s, t)| {
-                s.par_iter()
-                    .map(|&x| t.par_iter().map(move |&y| x * y))
-                    .flatten()
-            })
-            .flatten()
-            .collect::<Vec<_>>();
+        let mut array = Vec::with_capacity(self.rows * rhs.cols);
+        for r in 0..self.rows {
+            for c in 0..rhs.cols {
+                array.push(
+                    self.array[(r * self.cols)..((r + 1) * self.cols)]
+                        .iter()
+                        .zip(0..self.cols)
+                        .map(|(&s, oi)| s * rhs.array[oi * rhs.cols + c])
+                        .sum()
+                )
+            }
+        }
 
-        let mut ret = Self::Output {
-            rows: self.cols,
-            cols: self.rows * rhs.cols,
+        Self::Output {
+            rows: self.rows,
+            cols: rhs.cols,
             array,
         }
-        .sum(Some(Axis::COLUMN));
-        ret.reshape(self.rows, rhs.cols);
-        ret
     }
 }
 impl<T> Mul<&Matrix<T>> for Matrix<T>
