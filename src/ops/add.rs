@@ -17,11 +17,11 @@ where
             rows: self.rows,
             cols: self.cols,
             array: self
-            .array
-            .iter()
-            .zip(rhs.array.iter())
-            .map(|(&x, &y)| x + y)
-            .collect(),
+                .array
+                .iter()
+                .zip(rhs.array.iter())
+                .map(|(&x, &y)| x + y)
+                .collect(),
         }
     }
 }
