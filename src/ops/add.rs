@@ -1,11 +1,9 @@
 use crate::matrix::Matrix;
-use rayon::prelude::*;
 use std::ops::{Add, AddAssign};
 
 impl<T> Add<&Matrix<T>> for &Matrix<T>
 where
-    T: Add<Output = T> + Copy + Send + Sync,
-    Vec<T>: FromParallelIterator<T>,
+    T: Add<Output = T> + Copy,
 {
     type Output = Matrix<T>;
 
@@ -27,8 +25,7 @@ where
 }
 impl<T> Add<&Matrix<T>> for Matrix<T>
 where
-    T: Add<Output = T> + Copy + Send + Sync,
-    Vec<T>: FromParallelIterator<T>,
+    T: Add<Output = T> + Copy,
 {
     type Output = Matrix<T>;
 
@@ -38,8 +35,7 @@ where
 }
 impl<T> Add<Matrix<T>> for &Matrix<T>
 where
-    T: Add<Output = T> + Copy + Send + Sync,
-    Vec<T>: FromParallelIterator<T>,
+    T: Add<Output = T> + Copy,
 {
     type Output = Matrix<T>;
 
@@ -49,8 +45,7 @@ where
 }
 impl<T> Add<Matrix<T>> for Matrix<T>
 where
-    T: Add<Output = T> + Copy + Send + Sync,
-    Vec<T>: FromParallelIterator<T>,
+    T: Add<Output = T> + Copy,
 {
     type Output = Matrix<T>;
 
@@ -61,8 +56,7 @@ where
 
 impl<T> AddAssign<&Matrix<T>> for Matrix<T>
 where
-    T: Add<Output = T> + Copy + Send + Sync,
-    Vec<T>: FromParallelIterator<T>,
+    T: Add<Output = T> + Copy,
 {
     fn add_assign(&mut self, rhs: &Matrix<T>) {
         assert_eq!(self.rows, rhs.rows);
@@ -70,16 +64,15 @@ where
 
         self.array = self
             .array
-            .par_iter()
-            .zip(rhs.array.par_iter())
+            .iter()
+            .zip(rhs.array.iter())
             .map(|(&x, &y)| x + y)
             .collect();
     }
 }
 impl<T> AddAssign<Matrix<T>> for Matrix<T>
 where
-    T: Add<Output = T> + Copy + Send + Sync,
-    Vec<T>: FromParallelIterator<T>,
+    T: Add<Output = T> + Copy,
 {
     fn add_assign(&mut self, rhs: Matrix<T>) {
         *self += &rhs;
