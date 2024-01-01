@@ -193,4 +193,8 @@ impl<T: Float> Matrix<T> {
             array: self.array.iter().map(|&x| x.tanh()).collect(),
         }
     }
+
+    pub fn sigmoid(&self) -> Self {
+        (Self::one_like(self) + (-self).exp()).recip()
+    }
 }
