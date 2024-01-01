@@ -1,3 +1,4 @@
+use num_traits::Zero;
 use crate::matrix::{Axis, Matrix};
 
 impl<T> Matrix<T>
@@ -84,5 +85,14 @@ where
                 .map(|(&x, &y)| if x < y { x } else { y })
                 .collect(),
         }
+    }
+}
+
+impl<T> Matrix<T>
+where
+    T: PartialOrd + Copy + Zero,
+{
+    pub fn relu(&self) -> Self {
+        self.cwise_max(&Self::zero_like(self))
     }
 }
