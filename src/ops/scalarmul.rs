@@ -4,26 +4,21 @@ use std::ops::{Div, DivAssign, Mul, MulAssign, Neg};
 macro_rules! defscalarmul {
     ( $( $t: ty ),+ ) => {
         $(
-            impl Mul<&Matrix<$t>> for $t
-            {
+            impl Mul<&Matrix<$t>> for $t {
                 type Output = Matrix<$t>;
 
-                fn mul(self, rhs: &Matrix<$t>) -> Self::Output
-                {
-                    Self::Output
-                    {
+                fn mul(self, rhs: &Matrix<$t>) -> Self::Output {
+                    Self::Output {
                         rows: rhs.rows,
                         cols: rhs.cols,
                         array: rhs.array.iter().map(|&x| x * self).collect(),
                     }
                 }
             }
-            impl Mul<Matrix<$t>> for $t
-            {
+            impl Mul<Matrix<$t>> for $t {
                 type Output = Matrix<$t>;
 
-                fn mul(self, rhs: Matrix<$t>) -> Self::Output
-                {
+                fn mul(self, rhs: Matrix<$t>) -> Self::Output {
                     self * &rhs
                 }
             }
