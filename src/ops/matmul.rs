@@ -53,6 +53,29 @@ where
     type Output = Matrix<T>;
 
     fn mul(self, rhs: &Matrix<T>) -> Self::Output {
+        // scalar * scalar
+        if self.is_scalar() && rhs.is_scalar() {
+            return Self::Output {
+                rows: 1,
+                cols: 1,
+                array: vec![self.array[0] * rhs.array[0]],
+            };
+        // scalar * matrix
+        } else if self.is_scalar() {
+            return Self::Output {
+                rows: rhs.rows,
+                cols: rhs.cols,
+                array: rhs.array.iter().map(|&x| self.array[0] * x).collect(),
+            };
+        // matrix * scalar
+        } else if rhs.is_scalar() {
+            return Self::Output {
+                rows: self.rows,
+                cols: self.cols,
+                array: self.array.iter().map(|&x| x * rhs.array[0]).collect(),
+            };
+        }
+
         assert_eq!(self.cols, rhs.rows);
 
         // row_vector * col_vector
