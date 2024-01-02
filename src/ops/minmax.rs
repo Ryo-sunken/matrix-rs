@@ -1,5 +1,5 @@
-use num_traits::Zero;
 use crate::matrix::{Axis, Matrix};
+use num_traits::Zero;
 
 impl<T> Matrix<T>
 where
