@@ -176,6 +176,33 @@ where
             array,
         }
     }
+
+    pub fn concat(&self, rhs: &Matrix<T>, ax: Axis) -> Self {
+        match ax {
+            Axis::ROW => {
+                assert_eq!(self.cols, rhs.cols);
+                Self {
+                    rows: self.rows + rhs.rows,
+                    cols: self.cols,
+                    array: [&self.array[..], &rhs.array[..]].concat(),
+                }
+            }
+            Axis::COLUMN => {
+                assert_eq!(self.rows, rhs.rows);
+                Self {
+                    rows: self.rows,
+                    cols: self.cols + rhs.cols,
+                    array: self
+                        .array
+                        .chunks(self.rows)
+                        .zip(rhs.array.chunks(rhs.rows))
+                        .map(|(s, t)| [s, t].concat())
+                        .flatten()
+                        .collect(),
+                }
+            }
+        }
+    }
 }
 
 // ParticalEq, Eq implementation
