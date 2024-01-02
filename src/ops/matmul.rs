@@ -100,8 +100,7 @@ where
                 array: rhs
                     .array
                     .iter()
-                    .map(|&x| self.array.iter().map(move |&y| x * y))
-                    .flatten()
+                    .flat_map(|&x| self.array.iter().map(move |&y| x * y))
                     .collect(),
             };
         }
