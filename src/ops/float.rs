@@ -197,4 +197,16 @@ impl<T: Float> Matrix<T> {
     pub fn sigmoid(&self) -> Self {
         (Self::one_like(self) + (-self).exp()).recip()
     }
+
+    pub fn step(&self) -> Self {
+        Self {
+            rows: self.rows,
+            cols: self.cols,
+            array: self
+                .array
+                .iter()
+                .map(|&x| if x > T::zero() { T::one() } else { T::zero() })
+                .collect(),
+        }
+    }
 }

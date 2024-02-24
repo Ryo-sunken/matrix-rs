@@ -233,4 +233,15 @@ mod tests {
             ])
         );
     }
+
+    #[test]
+    fn step() {
+        let x = Matrix::new([[-2., -1., 0., 1., 2.]]);
+        assert_eq!(
+            x.step(),
+            Matrix::new([[
+                0., 0., 0., 1., 1.
+            ]])
+        );
+    }
 }
