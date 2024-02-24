@@ -1,3 +1,5 @@
+use std::iter::Sum;
+
 use crate::matrix::Matrix;
 use num_traits::Float;
 
@@ -208,5 +210,15 @@ impl<T: Float> Matrix<T> {
                 .map(|&x| if x > T::zero() { T::one() } else { T::zero() })
                 .collect(),
         }
+    }
+}
+
+impl<T> Matrix<T>
+where T: Sum + Float
+{
+    pub fn softmax(&self) -> Self {
+        let max_coef = self.max(None).array[0];
+        let tmp = self - Matrix::one_like(self) * max_coef;
+        tmp.exp() / tmp.exp().sum(None).array[0]
     }
 }
