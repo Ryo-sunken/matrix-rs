@@ -198,6 +198,19 @@ mod tests {
     }
 
     #[test]
+    fn relu() {
+        let x = Matrix::new([[-1., 2., -3.], [4., -5., 6.], [-7., 8., 9.]]);
+        assert_eq!(
+            x.relu(),
+            Matrix::new([
+                [0., 2., 0.], 
+                [4., 0., 6.], 
+                [0., 8., 9.]
+            ])
+        );
+    }
+
+    #[test]
     fn index() {
         let x = Matrix::new([[1., 2., 3.], [4., 5., 6.], [7., 8., 9.]]);
         assert_eq!(x[0][0], 1.);
