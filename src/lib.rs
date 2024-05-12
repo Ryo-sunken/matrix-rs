@@ -159,6 +159,10 @@ mod tests {
         let y = Matrix::new([[1., 2., 3.]]).transpose();
         assert_eq!(&x * &y, Matrix::new([[14., 32., 50.]]).transpose());
         assert_eq!(y.transpose() * &x, Matrix::new([[30., 36., 42.]]));
+
+        let x = Matrix::new([[0.1, 0.3, 0.5], [0.2, 0.4, 0.6]]);
+        let y = Matrix::new([[1.0, 0.5]]);
+        assert_eq!(&y * &x, Matrix::new([[0.2, 0.5, 0.8]]));
     }
 
     #[test]

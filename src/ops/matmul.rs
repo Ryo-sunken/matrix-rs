@@ -98,7 +98,7 @@ where
                 array: rhs
                     .transpose()
                     .array
-                    .chunks(rhs.cols)
+                    .chunks(rhs.rows)
                     .map(|s| s.iter().zip(self.array.iter()).map(|(&x, &y)| x * y).sum())
                     .collect::<Vec<_>>(),
             };
