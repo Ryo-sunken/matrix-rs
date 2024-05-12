@@ -95,11 +95,11 @@ where
             return Self::Output {
                 rows: 1,
                 cols: rhs.cols,
-                array: self
+                array: rhs
                     .transpose()
                     .array
-                    .chunks(self.cols)
-                    .map(|s| s.iter().zip(rhs.array.iter()).map(|(&x, &y)| x * y).sum())
+                    .chunks(rhs.cols)
+                    .map(|s| s.iter().zip(self.array.iter()).map(|(&x, &y)| x * y).sum())
                     .collect::<Vec<_>>(),
             };
         // matrix * col_vector
