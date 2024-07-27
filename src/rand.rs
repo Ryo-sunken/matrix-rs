@@ -1,8 +1,8 @@
 use crate::matrix::Matrix;
 
 use rand::distributions::{Distribution, Standard};
-use rand::rngs::ThreadRng;
 use rand::Rng;
+use rand_chacha::ChaCha8Rng;
 
 use rand_distr::uniform::SampleUniform;
 use rand_distr::{Normal, StandardNormal, Uniform};
@@ -13,7 +13,7 @@ impl<T> Matrix<T>
 where
     Standard: Distribution<T>,
 {
-    pub fn rand(rows: usize, cols: usize, engine: &mut ThreadRng) -> Self {
+    pub fn rand(rows: usize, cols: usize, engine: &mut ChaCha8Rng) -> Self {
         Self {
             rows,
             cols,
@@ -27,7 +27,7 @@ where
     T: Float,
     StandardNormal: Distribution<T>,
 {
-    pub fn randn(rows: usize, cols: usize, engine: &mut ThreadRng) -> Self {
+    pub fn randn(rows: usize, cols: usize, engine: &mut ChaCha8Rng) -> Self {
         let dist = Normal::<T>::new(T::zero(), T::one()).unwrap();
         Self {
             rows,
@@ -41,7 +41,7 @@ impl<T> Matrix<T>
 where
     T: Float + SampleUniform,
 {
-    pub fn randu(rows: usize, cols: usize, engine: &mut ThreadRng) -> Self {
+    pub fn randu(rows: usize, cols: usize, engine: &mut ChaCha8Rng) -> Self {
         let dist = Uniform::<T>::new(T::zero(), T::one());
         Self {
             rows,
