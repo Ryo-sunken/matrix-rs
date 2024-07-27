@@ -211,6 +211,31 @@ impl<T: Float> Matrix<T> {
                 .collect(),
         }
     }
+
+    pub fn clamp(&self, min: T, max: T) -> Self {
+        Self {
+            rows: self.rows,
+            cols: self.cols,
+            array: self
+                .array
+                .iter()
+                .map(|&x| if x < min { min } else if x > max { max } else { x })
+                .collect(),
+        }
+    }
+
+    pub fn repeat(&self, min: T, max: T) -> Self {
+        Self {
+            rows: self.rows,
+            cols: self.cols,
+            array: self
+                .array
+                .iter()
+                .map(|&x| if x < min { x + max - min } else if x > max { x - (max - min) } else { x })
+                .collect(),
+        }
+    }
+
 }
 
 impl<T> Matrix<T>
