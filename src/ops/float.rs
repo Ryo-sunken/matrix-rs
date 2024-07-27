@@ -219,7 +219,15 @@ impl<T: Float> Matrix<T> {
             array: self
                 .array
                 .iter()
-                .map(|&x| if x < min { min } else if x > max { max } else { x })
+                .map(|&x| {
+                    if x < min {
+                        min
+                    } else if x > max {
+                        max
+                    } else {
+                        x
+                    }
+                })
                 .collect(),
         }
     }
@@ -231,15 +239,23 @@ impl<T: Float> Matrix<T> {
             array: self
                 .array
                 .iter()
-                .map(|&x| if x < min { x + max - min } else if x > max { x - (max - min) } else { x })
+                .map(|&x| {
+                    if x < min {
+                        x + max - min
+                    } else if x > max {
+                        x - (max - min)
+                    } else {
+                        x
+                    }
+                })
                 .collect(),
         }
     }
-
 }
 
 impl<T> Matrix<T>
-where T: Sum + Float
+where
+    T: Sum + Float,
 {
     pub fn softmax(&self) -> Self {
         let max_coef = self.max(None).array[0];
