@@ -109,7 +109,7 @@ where
                 cols: 1,
                 array: self
                     .array
-                    .chunks(self.rows)
+                    .chunks(self.cols)
                     .map(|s| s.iter().zip(rhs.array.iter()).map(|(&x, &y)| x * y).sum())
                     .collect::<Vec<_>>(),
             };
