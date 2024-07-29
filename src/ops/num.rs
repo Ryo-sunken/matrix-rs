@@ -17,17 +17,28 @@ where
         Self::zero(mat.rows, mat.cols)
     }
 
-    pub fn diag<const D: usize>(data: [T; D]) -> Self {
-        let mut array = vec![T::zero(); D * D];
-        for d in 0..D {
-            array[d * D + d] = data[d].clone();
+    pub fn diag(&self) -> Self {
+        assert!(self.rows == 1 || self.cols == 1, "Only the vector.");
+        let size = if self.rows != 1 { self.rows } else { self.cols };
+        let mut ret = Matrix::<T>::zero(size, size);
+        for d in 0..size {
+            ret.array[d * size + d] = self.array[d].clone();
         }
+        ret
+    }
 
-        Self {
-            rows: D,
-            cols: D,
-            array,
+    pub fn diag_row(&self) -> Self {
+        let mut ret = Matrix::zero(self.rows, self.rows * self.cols);
+        for i in 0..self.rows {
+            for j in 0..self.cols {
+                ret[i][j + i * self.cols] = self[i][j].clone();
+            }
         }
+        ret
+    }
+
+    pub fn diag_col(&self) -> Self {
+        self.transpose().diag_row().transpose()
     }
 }
 

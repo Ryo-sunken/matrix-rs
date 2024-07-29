@@ -1,6 +1,6 @@
 use std::iter::Sum;
 
-use crate::matrix::Matrix;
+use crate::matrix::{Axis, Matrix};
 use num_traits::Float;
 
 impl<T: Float> Matrix<T> {
@@ -249,6 +249,72 @@ impl<T: Float> Matrix<T> {
                     }
                 })
                 .collect(),
+        }
+    }
+
+    pub fn normalize1(&self, axis: Option<Axis>) -> Self {
+        match axis {
+            Some(Axis::ROW) => Self {
+                rows: self.rows,
+                cols: self.cols,
+                array: self
+                    .array
+                    .chunks(self.cols)
+                    .map(|arr| {
+                        arr.iter()
+                            .map(|&x| x / arr.iter().fold(T::zero(), |first, x| first + *x))
+                    })
+                    .flatten()
+                    .collect(),
+            },
+            Some(Axis::COLUMN) => self.transpose().normalize1(Some(Axis::ROW)).transpose(),
+            None => Self {
+                rows: self.rows,
+                cols: self.cols,
+                array: self
+                    .array
+                    .iter()
+                    .map(|&x| x / self.array.iter().fold(T::zero(), |first, x| first + *x))
+                    .collect(),
+            },
+        }
+    }
+
+    pub fn normalize2(&self, axis: Option<Axis>) -> Self {
+        match axis {
+            Some(Axis::ROW) => Self {
+                rows: self.rows,
+                cols: self.cols,
+                array: self
+                    .array
+                    .chunks(self.cols)
+                    .map(|arr| {
+                        arr.iter().map(|&x| {
+                            x / arr
+                                .iter()
+                                .fold(T::zero(), |first, x| first + *x * *x)
+                                .sqrt()
+                        })
+                    })
+                    .flatten()
+                    .collect(),
+            },
+            Some(Axis::COLUMN) => self.transpose().normalize2(Some(Axis::ROW)).transpose(),
+            None => Self {
+                rows: self.rows,
+                cols: self.cols,
+                array: self
+                    .array
+                    .iter()
+                    .map(|&x| {
+                        x / self
+                            .array
+                            .iter()
+                            .fold(T::zero(), |first, x| first + *x * *x)
+                            .sqrt()
+                    })
+                    .collect(),
+            },
         }
     }
 }

@@ -1,5 +1,4 @@
 mod add;
-pub mod diag;
 pub mod float;
 mod index;
 pub mod matmul;

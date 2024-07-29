@@ -55,6 +55,23 @@ impl<T> Matrix<T> {
         Self { rows, cols, array }
     }
 
+    pub fn from_vec2d(array: Vec<Vec<T>>, rows: usize, cols: usize) -> Self {
+        assert!(
+            rows != 0 && cols != 0,
+            "Rows and columns cannot be set to zero."
+        );
+        assert_eq!(
+            array.iter().flatten().collect::<Vec<_>>().len(),
+            rows * cols,
+            "The array length must be equal the matrix size."
+        );
+        Self {
+            rows,
+            cols,
+            array: array.into_iter().flatten().collect(),
+        }
+    }
+
     pub fn from_vec_row(array: Vec<T>) -> Self {
         let cols = array.len();
         Self::from_vec(array, 1, cols)
