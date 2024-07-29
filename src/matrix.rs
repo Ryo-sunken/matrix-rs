@@ -81,6 +81,10 @@ impl<T> Matrix<T> {
         let rows = array.len();
         Self::from_vec(array, rows, 1)
     }
+    
+    pub fn to_slice(&self) -> &[T] {
+        &self.array
+    }
 
     pub fn rows(&self) -> usize {
         self.rows
