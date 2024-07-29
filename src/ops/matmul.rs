@@ -1,4 +1,4 @@
-use crate::matrix::Matrix;
+use crate::Matrix;
 use std::{
     iter::Sum,
     ops::{Div, Mul},

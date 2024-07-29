@@ -1,4 +1,4 @@
-use crate::matrix::{Axis, Matrix};
+use crate::{Axis, Matrix};
 use std::iter::Sum;
 
 impl<T> Matrix<T>

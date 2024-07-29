@@ -1,4 +1,4 @@
-use crate::matrix::Matrix;
+use crate::Matrix;
 use std::ops::{Index, IndexMut};
 
 impl<T> Index<usize> for Matrix<T> {

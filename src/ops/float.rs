@@ -1,6 +1,6 @@
 use std::iter::Sum;
 
-use crate::matrix::{Axis, Matrix};
+use crate::{Axis, Matrix};
 use num_traits::Float;
 
 impl<T: Float> Matrix<T> {

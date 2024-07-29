@@ -1,4 +1,4 @@
-use crate::matrix::Matrix;
+use crate::Matrix;
 use std::ops::{Div, DivAssign, Mul, MulAssign, Neg};
 
 macro_rules! defscalarmul {

@@ -1,4 +1,4 @@
-use crate::matrix::Matrix;
+use crate::Matrix;
 use std::ops::{Add, AddAssign};
 
 impl<T> Add<&Matrix<T>> for &Matrix<T>
