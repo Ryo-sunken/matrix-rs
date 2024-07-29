@@ -482,6 +482,27 @@ mod tests {
     }
 
     #[test]
+    fn triangle_func() {
+        let x = Matrix::new([[1., 2., 3.], [4., 5., 6.], [7., 8., 9.]]);
+        assert_eq!(
+            x.sin(),
+            Matrix::new([
+                [(1_f64).sin(), (2_f64).sin(), (3_f64).sin()],
+                [(4_f64).sin(), (5_f64).sin(), (6_f64).sin()],
+                [(7_f64).sin(), (8_f64).sin(), (9_f64).sin()]
+            ])
+        );
+        assert_eq!(
+            x.cos(),
+            Matrix::new([
+                [(1_f64).cos(), (2_f64).cos(), (3_f64).cos()],
+                [(4_f64).cos(), (5_f64).cos(), (6_f64).cos()],
+                [(7_f64).cos(), (8_f64).cos(), (9_f64).cos()]
+            ])
+        );
+    }
+
+    #[test]
     fn index() {
         let x = Matrix::new([[1., 2., 3.], [4., 5., 6.], [7., 8., 9.]]);
         assert_eq!(x[0][0], 1.);
