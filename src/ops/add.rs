@@ -156,3 +156,30 @@ where
         *self += &rhs;
     }
 }
+
+#[cfg(not(feature="rayon"))]
+impl<T> AddAssign<&Matrix<T>> for Matrix<T>
+where 
+    T: Add<Output = T> + Copy,
+{
+    fn add_assign(&mut self, rhs: &Matrix<T>) {
+        assert_eq!(self.rows, rhs.rows);
+        assert_eq!(self.cols, rhs.cols);
+        self.array = self
+            .array
+            .iter()
+            .zip(rhs.array.iter())
+            .map(|(&x, &y)| x + y)
+            .collect(); 
+    }
+}
+
+#[cfg(not(feature="rayon"))]
+impl<T> AddAssign<Matrix<T>> for Matrix<T>
+where
+    T: Add<Output = T> + Copy,
+{
+    fn add_assign(&mut self, rhs: Matrix<T>) {
+        *self += &rhs;
+    }
+}
