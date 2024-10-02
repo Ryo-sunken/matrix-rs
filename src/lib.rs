@@ -675,6 +675,15 @@ mod tests {
     }
 
     #[test]
+    fn floor() {
+        let x = Matrix::new_col_vector([1., 2., 3.]);
+        assert_eq!(
+            x.floor(),
+            Matrix::new_col_vector([1_f64.floor(), 2_f64.floor(), 3_f64.floor()])
+        );
+    }
+
+    #[test]
     fn diag() {
         let x = Matrix::new_col_vector([1., 2., 3.]);
         assert_eq!(

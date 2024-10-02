@@ -3,7 +3,16 @@ use std::iter::Sum;
 use crate::{Axis, Matrix};
 use num_traits::Float;
 
-impl<T: Float> Matrix<T> {
+#[cfg(feature = "mpi")]
+use mpi::traits::*;
+#[cfg(feature = "rayon")]
+use rayon::{iter::FromParallelIterator, prelude::*};
+
+#[cfg(not(feature="rayon"))]
+impl<T> Matrix<T>
+where
+    T: Float,
+{
     pub fn floor(&self) -> Self {
         Self {
             rows: self.rows,
@@ -319,6 +328,7 @@ impl<T: Float> Matrix<T> {
     }
 }
 
+#[cfg(not(feature="rayon"))]
 impl<T> Matrix<T>
 where
     T: Sum + Float,
