@@ -9,9 +9,9 @@ use mpi::traits::*;
 #[cfg(feature = "rayon")]
 use rayon::{iter::FromParallelIterator, prelude::*};
 
-#[cfg(feature="rayon")]
+#[cfg(feature = "rayon")]
 impl<T> Matrix<T>
-where 
+where
     T: Mul<Output = T> + Copy + Send + Sync,
     Vec<T>: FromParallelIterator<T>,
 {
@@ -32,9 +32,9 @@ where
     }
 }
 
-#[cfg(feature="rayon")]
+#[cfg(feature = "rayon")]
 impl<T> Matrix<T>
-where 
+where
     T: Div<Output = T> + Copy + Send + Sync,
     Vec<T>: FromParallelIterator<T>,
 {
@@ -55,7 +55,7 @@ where
     }
 }
 
-#[cfg(not(feature="rayon"))]
+#[cfg(not(feature = "rayon"))]
 impl<T> Matrix<T>
 where
     T: Mul<Output = T> + Copy,
@@ -77,7 +77,7 @@ where
     }
 }
 
-#[cfg(not(feature="rayon"))]
+#[cfg(not(feature = "rayon"))]
 impl<T> Matrix<T>
 where
     T: Div<Output = T> + Copy,
@@ -99,9 +99,9 @@ where
     }
 }
 
-#[cfg(feature="rayon")]
+#[cfg(feature = "rayon")]
 impl<T> Mul<&Matrix<T>> for &Matrix<T>
-where 
+where
     T: Sum + Mul<Output = T> + Copy + Send + Sync,
     Vec<T>: FromParallelIterator<T>,
 {
@@ -154,7 +154,12 @@ where
                     .transpose()
                     .array
                     .chunks(rhs.rows)
-                    .map(|s| s.par_iter().zip(self.array.par_iter()).map(|(&x, &y)| x * y).sum())
+                    .map(|s| {
+                        s.par_iter()
+                            .zip(self.array.par_iter())
+                            .map(|(&x, &y)| x * y)
+                            .sum()
+                    })
                     .collect::<Vec<_>>(),
             };
         // matrix * col_vector
@@ -165,7 +170,12 @@ where
                 array: self
                     .array
                     .chunks(self.cols)
-                    .map(|s| s.par_iter().zip(rhs.array.par_iter()).map(|(&x, &y)| x * y).sum())
+                    .map(|s| {
+                        s.par_iter()
+                            .zip(rhs.array.par_iter())
+                            .map(|(&x, &y)| x * y)
+                            .sum()
+                    })
                     .collect::<Vec<_>>(),
             };
         }
@@ -204,7 +214,7 @@ where
     }
 }
 
-#[cfg(feature="rayon")]
+#[cfg(feature = "rayon")]
 impl<T> Mul<&Matrix<T>> for Matrix<T>
 where
     T: Sum + Mul<Output = T> + Copy + Send + Sync,
@@ -217,9 +227,9 @@ where
     }
 }
 
-#[cfg(feature="rayon")]
+#[cfg(feature = "rayon")]
 impl<T> Mul<Matrix<T>> for &Matrix<T>
-where 
+where
     T: Sum + Mul<Output = T> + Copy + Send + Sync,
     Vec<T>: FromParallelIterator<T>,
 {
@@ -230,9 +240,9 @@ where
     }
 }
 
-#[cfg(feature="rayon")]
+#[cfg(feature = "rayon")]
 impl<T> Mul<Matrix<T>> for Matrix<T>
-where 
+where
     T: Sum + Mul<Output = T> + Copy + Send + Sync,
     Vec<T>: FromParallelIterator<T>,
 {
@@ -243,7 +253,7 @@ where
     }
 }
 
-#[cfg(not(feature="rayon"))]
+#[cfg(not(feature = "rayon"))]
 impl<T> Mul<&Matrix<T>> for &Matrix<T>
 where
     T: Sum + Mul<Output = T> + Copy,
@@ -347,7 +357,7 @@ where
     }
 }
 
-#[cfg(not(feature="rayon"))]
+#[cfg(not(feature = "rayon"))]
 impl<T> Mul<&Matrix<T>> for Matrix<T>
 where
     T: Sum + Mul<Output = T> + Copy,
@@ -359,7 +369,7 @@ where
     }
 }
 
-#[cfg(not(feature="rayon"))]
+#[cfg(not(feature = "rayon"))]
 impl<T> Mul<Matrix<T>> for &Matrix<T>
 where
     T: Sum + Mul<Output = T> + Copy,
@@ -371,7 +381,7 @@ where
     }
 }
 
-#[cfg(not(feature="rayon"))]
+#[cfg(not(feature = "rayon"))]
 impl<T> Mul<Matrix<T>> for Matrix<T>
 where
     T: Sum + Mul<Output = T> + Copy,

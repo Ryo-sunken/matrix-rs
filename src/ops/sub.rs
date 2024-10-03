@@ -6,7 +6,7 @@ use mpi::traits::*;
 #[cfg(feature = "rayon")]
 use rayon::{iter::FromParallelIterator, prelude::*};
 
-#[cfg(feature="rayon")]
+#[cfg(feature = "rayon")]
 impl<T> Sub<&Matrix<T>> for &Matrix<T>
 where
     T: Sub<Output = T> + Copy + Send + Sync,
@@ -31,9 +31,9 @@ where
     }
 }
 
-#[cfg(feature="rayon")]
+#[cfg(feature = "rayon")]
 impl<T> Sub<&Matrix<T>> for Matrix<T>
-where 
+where
     T: Sub<Output = T> + Copy + Send + Sync,
     Vec<T>: FromParallelIterator<T>,
 {
@@ -44,9 +44,9 @@ where
     }
 }
 
-#[cfg(feature="rayon")]
+#[cfg(feature = "rayon")]
 impl<T> Sub<Matrix<T>> for &Matrix<T>
-where 
+where
     T: Sub<Output = T> + Copy + Send + Sync,
     Vec<T>: FromParallelIterator<T>,
 {
@@ -57,9 +57,9 @@ where
     }
 }
 
-#[cfg(feature="rayon")]
+#[cfg(feature = "rayon")]
 impl<T> Sub<Matrix<T>> for Matrix<T>
-where 
+where
     T: Sub<Output = T> + Copy + Send + Sync,
     Vec<T>: FromParallelIterator<T>,
 {
@@ -70,7 +70,7 @@ where
     }
 }
 
-#[cfg(not(feature="rayon"))]
+#[cfg(not(feature = "rayon"))]
 impl<T> Sub<&Matrix<T>> for &Matrix<T>
 where
     T: Sub<Output = T> + Copy,
@@ -94,7 +94,7 @@ where
     }
 }
 
-#[cfg(not(feature="rayon"))]
+#[cfg(not(feature = "rayon"))]
 impl<T> Sub<&Matrix<T>> for Matrix<T>
 where
     T: Sub<Output = T> + Copy,
@@ -106,7 +106,7 @@ where
     }
 }
 
-#[cfg(not(feature="rayon"))]
+#[cfg(not(feature = "rayon"))]
 impl<T> Sub<Matrix<T>> for &Matrix<T>
 where
     T: Sub<Output = T> + Copy,
@@ -118,7 +118,7 @@ where
     }
 }
 
-#[cfg(not(feature="rayon"))]
+#[cfg(not(feature = "rayon"))]
 impl<T> Sub<Matrix<T>> for Matrix<T>
 where
     T: Sub<Output = T> + Copy,
@@ -130,9 +130,9 @@ where
     }
 }
 
-#[cfg(feature="rayon")]
+#[cfg(feature = "rayon")]
 impl<T> SubAssign<&Matrix<T>> for Matrix<T>
-where 
+where
     T: Sub<Output = T> + Copy + Send + Sync,
     Vec<T>: FromParallelIterator<T>,
 {
@@ -149,9 +149,9 @@ where
     }
 }
 
-#[cfg(feature="rayon")]
+#[cfg(feature = "rayon")]
 impl<T> SubAssign<Matrix<T>> for Matrix<T>
-where 
+where
     T: Sub<Output = T> + Copy + Send + Sync,
     Vec<T>: FromParallelIterator<T>,
 {
@@ -160,7 +160,7 @@ where
     }
 }
 
-#[cfg(not(feature="rayon"))]
+#[cfg(not(feature = "rayon"))]
 impl<T> SubAssign<&Matrix<T>> for Matrix<T>
 where
     T: Sub<Output = T> + Copy,
@@ -178,7 +178,7 @@ where
     }
 }
 
-#[cfg(not(feature="rayon"))]
+#[cfg(not(feature = "rayon"))]
 impl<T> SubAssign<Matrix<T>> for Matrix<T>
 where
     T: Sub<Output = T> + Copy,
