@@ -6,7 +6,7 @@ use mpi::traits::*;
 #[cfg(feature = "rayon")]
 use rayon::{iter::FromParallelIterator, prelude::*};
 
-#[cfg(feature="rayon")]
+#[cfg(feature = "rayon")]
 macro_rules! defscalarmul_rayon {
     ( $( $t: ty ),+ ) => {
         $(
@@ -31,7 +31,7 @@ macro_rules! defscalarmul_rayon {
     };
 }
 
-#[cfg(not(feature="rayon"))]
+#[cfg(not(feature = "rayon"))]
 macro_rules! defscalarmul {
     ( $( $t: ty ),+ ) => {
         $(
@@ -57,9 +57,9 @@ macro_rules! defscalarmul {
     };
 }
 
-#[cfg(feature="rayon")]
+#[cfg(feature = "rayon")]
 impl<T> Neg for &Matrix<T>
-where 
+where
     T: Neg<Output = T> + Copy + Send + Sync,
     Vec<T>: FromParallelIterator<T>,
 {
@@ -74,7 +74,7 @@ where
     }
 }
 
-#[cfg(feature="rayon")]
+#[cfg(feature = "rayon")]
 impl<T> Neg for Matrix<T>
 where
     T: Neg<Output = T> + Copy + Send + Sync,
@@ -87,7 +87,7 @@ where
     }
 }
 
-#[cfg(not(feature="rayon"))]
+#[cfg(not(feature = "rayon"))]
 impl<T> Neg for &Matrix<T>
 where
     T: Neg<Output = T> + Copy,
@@ -103,7 +103,7 @@ where
     }
 }
 
-#[cfg(not(feature="rayon"))]
+#[cfg(not(feature = "rayon"))]
 impl<T> Neg for Matrix<T>
 where
     T: Neg<Output = T> + Copy,
@@ -115,15 +115,15 @@ where
     }
 }
 
-#[cfg(feature="rayon")]
+#[cfg(feature = "rayon")]
 defscalarmul_rayon![i8, i16, i32, i64, isize, u8, u16, u32, u64, usize, f32, f64];
 
-#[cfg(not(feature="rayon"))]
+#[cfg(not(feature = "rayon"))]
 defscalarmul![i8, i16, i32, i64, isize, u8, u16, u32, u64, usize, f32, f64];
 
-#[cfg(feature="rayon")]
+#[cfg(feature = "rayon")]
 impl<T> Mul<T> for &Matrix<T>
-where 
+where
     T: Mul<Output = T> + Copy + Send + Sync,
     Vec<T>: FromParallelIterator<T>,
 {
@@ -138,7 +138,7 @@ where
     }
 }
 
-#[cfg(feature="rayon")]
+#[cfg(feature = "rayon")]
 impl<T> Mul<T> for Matrix<T>
 where
     T: Mul<Output = T> + Copy + Send + Sync,
@@ -151,7 +151,7 @@ where
     }
 }
 
-#[cfg(not(feature="rayon"))]
+#[cfg(not(feature = "rayon"))]
 impl<T> Mul<T> for &Matrix<T>
 where
     T: Mul<Output = T> + Copy,
@@ -167,7 +167,7 @@ where
     }
 }
 
-#[cfg(not(feature="rayon"))]
+#[cfg(not(feature = "rayon"))]
 impl<T> Mul<T> for Matrix<T>
 where
     T: Mul<Output = T> + Copy,
@@ -179,7 +179,7 @@ where
     }
 }
 
-#[cfg(feature="rayon")]
+#[cfg(feature = "rayon")]
 impl<T> MulAssign<T> for Matrix<T>
 where
     T: Mul<Output = T> + Copy + Send + Sync,
@@ -190,7 +190,7 @@ where
     }
 }
 
-#[cfg(not(feature="rayon"))]
+#[cfg(not(feature = "rayon"))]
 impl<T> MulAssign<T> for Matrix<T>
 where
     T: Mul<Output = T> + Copy,
@@ -200,9 +200,9 @@ where
     }
 }
 
-#[cfg(feature="rayon")]
+#[cfg(feature = "rayon")]
 impl<T> Div<T> for &Matrix<T>
-where 
+where
     T: Div<Output = T> + Copy + Send + Sync,
     Vec<T>: FromParallelIterator<T>,
 {
@@ -217,7 +217,7 @@ where
     }
 }
 
-#[cfg(feature="rayon")]
+#[cfg(feature = "rayon")]
 impl<T> Div<T> for Matrix<T>
 where
     T: Div<Output = T> + Copy + Send + Sync,
@@ -230,7 +230,7 @@ where
     }
 }
 
-#[cfg(not(feature="rayon"))]
+#[cfg(not(feature = "rayon"))]
 impl<T> Div<T> for &Matrix<T>
 where
     T: Div<Output = T> + Copy,
@@ -246,7 +246,7 @@ where
     }
 }
 
-#[cfg(not(feature="rayon"))]
+#[cfg(not(feature = "rayon"))]
 impl<T> Div<T> for Matrix<T>
 where
     T: Div<Output = T> + Copy,
@@ -258,9 +258,9 @@ where
     }
 }
 
-#[cfg(feature="rayon")]
+#[cfg(feature = "rayon")]
 impl<T> DivAssign<T> for Matrix<T>
-where 
+where
     T: Div<Output = T> + Copy + Send + Sync,
     Vec<T>: FromParallelIterator<T>,
 {
@@ -269,7 +269,7 @@ where
     }
 }
 
-#[cfg(not(feature="rayon"))]
+#[cfg(not(feature = "rayon"))]
 impl<T> DivAssign<T> for Matrix<T>
 where
     T: Div<Output = T> + Copy,

@@ -56,7 +56,7 @@ where
     }
 }
 
-#[cfg(feature="rayon")]
+#[cfg(feature = "rayon")]
 impl<T> Add<Matrix<T>> for Matrix<T>
 where
     T: Add<Output = T> + Copy + Send + Sync,
@@ -69,9 +69,9 @@ where
     }
 }
 
-#[cfg(not(feature="rayon"))]
+#[cfg(not(feature = "rayon"))]
 impl<T> Add<&Matrix<T>> for &Matrix<T>
-where 
+where
     T: Add<Output = T> + Copy,
 {
     type Output = Matrix<T>;
@@ -92,9 +92,9 @@ where
     }
 }
 
-#[cfg(not(feature="rayon"))]
+#[cfg(not(feature = "rayon"))]
 impl<T> Add<&Matrix<T>> for Matrix<T>
-where 
+where
     T: Add<Output = T> + Copy,
 {
     type Output = Matrix<T>;
@@ -104,9 +104,9 @@ where
     }
 }
 
-#[cfg(not(feature="rayon"))]
+#[cfg(not(feature = "rayon"))]
 impl<T> Add<Matrix<T>> for &Matrix<T>
-where 
+where
     T: Add<Output = T> + Copy,
 {
     type Output = Matrix<T>;
@@ -116,9 +116,9 @@ where
     }
 }
 
-#[cfg(not(feature="rayon"))]
+#[cfg(not(feature = "rayon"))]
 impl<T> Add<Matrix<T>> for Matrix<T>
-where 
+where
     T: Add<Output = T> + Copy,
 {
     type Output = Matrix<T>;
@@ -157,9 +157,9 @@ where
     }
 }
 
-#[cfg(not(feature="rayon"))]
+#[cfg(not(feature = "rayon"))]
 impl<T> AddAssign<&Matrix<T>> for Matrix<T>
-where 
+where
     T: Add<Output = T> + Copy,
 {
     fn add_assign(&mut self, rhs: &Matrix<T>) {
@@ -170,11 +170,11 @@ where
             .iter()
             .zip(rhs.array.iter())
             .map(|(&x, &y)| x + y)
-            .collect(); 
+            .collect();
     }
 }
 
-#[cfg(not(feature="rayon"))]
+#[cfg(not(feature = "rayon"))]
 impl<T> AddAssign<Matrix<T>> for Matrix<T>
 where
     T: Add<Output = T> + Copy,
