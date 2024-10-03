@@ -141,6 +141,7 @@ where
         }
     }
 
+    // TODO! rayon化
     pub fn normalize1(&self, axis: Option<Axis>) -> Self {
         match axis {
             Some(Axis::ROW) => Self {
