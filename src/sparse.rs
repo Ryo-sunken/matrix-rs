@@ -3,6 +3,8 @@ use num_traits::identities::Zero;
 
 #[derive(Debug, Clone, PartialEq)]
 pub struct SparseMatrix<T> {
+    pub(crate) rows: usize,
+    pub(crate) cols: usize,
     pub(crate) val: Vec<T>,
     pub(crate) col_idx: Vec<usize>,
     pub(crate) row_ptr: Vec<usize>,
@@ -19,7 +21,7 @@ where
             .flatten()
             .collect();
 
-        let row_ptr = data
+        let mut row_ptr: Vec<_> = data
             .iter()
             .copied()
             .map(|arr| arr.iter().filter(|&x| !x.is_zero()).count())
@@ -28,11 +30,28 @@ where
                 Some(*cum)
             })
             .collect();
+        row_ptr.insert(0, 0);
 
         Self {
+            rows: R,
+            cols: C,
             val: idx_val.iter().copied().map(|(_, x)| x).collect(),
             col_idx: idx_val.iter().copied().map(|(i, _)| i).collect(),
             row_ptr,
         }
+    }
+
+    pub fn to_dence(&self) -> Matrix<T> {
+        let mut mat = Matrix::zero(self.rows, self.cols);
+
+        let mut i = 0;
+        for n in 0..self.val.len() {
+            if n >= self.row_ptr[i + 1] {
+                i += 1;
+            }
+            mat.array[i * self.rows + self.col_idx[n]] = self.val[n];
+        }
+
+        mat
     }
 }

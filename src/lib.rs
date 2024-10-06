@@ -727,10 +727,21 @@ mod tests {
         assert_eq!(
             x,
             SparseMatrix::<f64> {
+                rows: 4,
+                cols: 4,
                 val: vec![1., 2., 1., 3., 2., 1.],
                 col_idx: vec![0, 1, 2, 0, 3, 2],
                 row_ptr: vec![0, 1, 3, 5, 6],
             }
         );
+        assert_eq!(
+            x.to_dence(),
+            Matrix::<f64>::new([
+                [1., 0., 0., 0.],
+                [0., 2., 1., 0.],
+                [3., 0., 0., 2.],
+                [0., 0., 1., 0.],
+            ])
+        )
     }
 }

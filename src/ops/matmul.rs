@@ -1,4 +1,4 @@
-use crate::Matrix;
+use crate::{sparse::SparseMatrix, Matrix};
 use std::{
     iter::Sum,
     ops::{Div, Mul},
@@ -407,5 +407,19 @@ where
 
     fn mul(self, rhs: Matrix<T>) -> Self::Output {
         &self * &rhs
+    }
+}
+
+#[cfg(not(feature = "rayon"))]
+impl<T> Mul<&Matrix<T>> for &SparseMatrix<T>
+where
+    T: Sum + Mul<Output = T> + Copy,
+{
+    type Output = Matrix<T>;
+
+    fn mul(self, rhs: &Matrix<T>) -> Self::Output {
+        assert!(rhs.cols == 1);
+
+        todo!()
     }
 }
