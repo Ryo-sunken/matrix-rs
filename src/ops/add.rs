@@ -17,12 +17,14 @@ where
     fn add(self, rhs: &Matrix<T>) -> Self::Output {
         assert_eq!(self.rows, rhs.rows);
         assert_eq!(self.cols, rhs.cols);
+        let threads = num_cpus::get();
         Self::Output {
             rows: self.rows,
             cols: self.cols,
             array: self
                 .array
                 .par_iter()
+                .with_min_len(self.rows * self.cols / threads)
                 .zip(rhs.array.par_iter())
                 .map(|(&x, &y)| x + y)
                 .collect(),
@@ -137,9 +139,11 @@ where
     fn add_assign(&mut self, rhs: &Matrix<T>) {
         assert_eq!(self.rows, rhs.rows);
         assert_eq!(self.cols, rhs.cols);
+        let threads = num_cpus::get();
         self.array = self
             .array
             .par_iter()
+            .with_min_len(self.rows * self.cols / threads)
             .zip(rhs.array.par_iter())
             .map(|(&x, &y)| x + y)
             .collect();
