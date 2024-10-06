@@ -41,6 +41,10 @@ where
         }
     }
 
+    pub fn transpose(&self) -> Self {
+        self.to_dence().transpose().to_sparse()
+    }
+
     pub fn to_dence(&self) -> Matrix<T> {
         let mut mat = Matrix::zero(self.rows, self.cols);
 
