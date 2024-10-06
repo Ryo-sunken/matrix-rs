@@ -18,10 +18,11 @@ macro_rules! deffloatfunc_rayon {
         {
             $(
                 pub fn $f(&self) -> Self {
+                    let threads = num_cpus::get();
                     Self {
                         rows: self.rows,
                         cols: self.cols,
-                        array: self.array.par_iter().map(|&x| x.$f()).collect(),
+                        array: self.array.par_iter().with_min_len(self.rows * self.cols / threads).map(|&x| x.$f()).collect(),
                     }
                 }
             )+
@@ -62,26 +63,44 @@ where
     Vec<T>: FromParallelIterator<T>,
 {
     pub fn powi(&self, n: i32) -> Self {
+        let threads = num_cpus::get();
         Self {
             rows: self.rows,
             cols: self.cols,
-            array: self.array.par_iter().map(|&x| x.powi(n)).collect(),
+            array: self
+                .array
+                .par_iter()
+                .with_min_len(self.rows * self.cols / threads)
+                .map(|&x| x.powi(n))
+                .collect(),
         }
     }
 
     pub fn powf(&self, n: T) -> Self {
+        let threads = num_cpus::get();
         Self {
             rows: self.rows,
             cols: self.cols,
-            array: self.array.par_iter().map(|&x| x.powf(n)).collect(),
+            array: self
+                .array
+                .par_iter()
+                .with_min_len(self.rows * self.cols / threads)
+                .map(|&x| x.powf(n))
+                .collect(),
         }
     }
 
     pub fn log(&self, base: T) -> Self {
+        let threads = num_cpus::get();
         Self {
             rows: self.rows,
             cols: self.cols,
-            array: self.array.par_iter().map(|&x| x.log(base)).collect(),
+            array: self
+                .array
+                .par_iter()
+                .with_min_len(self.rows * self.cols / threads)
+                .map(|&x| x.log(base))
+                .collect(),
         }
     }
 
@@ -90,24 +109,28 @@ where
     }
 
     pub fn step(&self) -> Self {
+        let threads = num_cpus::get();
         Self {
             rows: self.rows,
             cols: self.cols,
             array: self
                 .array
                 .par_iter()
+                .with_min_len(self.rows * self.cols / threads)
                 .map(|&x| if x > T::zero() { T::one() } else { T::zero() })
                 .collect(),
         }
     }
 
     pub fn clamp(&self, min: T, max: T) -> Self {
+        let threads = num_cpus::get();
         Self {
             rows: self.rows,
             cols: self.cols,
             array: self
                 .array
                 .par_iter()
+                .with_min_len(self.rows * self.cols / threads)
                 .map(|&x| {
                     if x < min {
                         min
@@ -122,12 +145,14 @@ where
     }
 
     pub fn repeat(&self, min: T, max: T) -> Self {
+        let threads = num_cpus::get();
         Self {
             rows: self.rows,
             cols: self.cols,
             array: self
                 .array
                 .par_iter()
+                .with_min_len(self.rows * self.cols / threads)
                 .map(|&x| {
                     if x < min {
                         x + max - min
@@ -143,6 +168,7 @@ where
 
     // TODO! rayon化
     pub fn normalize1(&self, axis: Option<Axis>) -> Self {
+        let threads = num_cpus::get();
         match axis {
             Some(Axis::ROW) => Self {
                 rows: self.rows,
@@ -171,6 +197,7 @@ where
     }
 
     pub fn normalize2(&self, axis: Option<Axis>) -> Self {
+        let threads = num_cpus::get();
         match axis {
             Some(Axis::ROW) => Self {
                 rows: self.rows,
