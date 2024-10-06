@@ -752,14 +752,9 @@ mod tests {
 
     #[test]
     fn sparse_mul() {
-        let x = SparseMatrix::new([
-            [1., 0., 0., 0.],
-            [0., 2., 1., 0.],
-            [3., 0., 0., 2.],
-            [0., 0., 1., 0.],
-        ]);
+        let x = SparseMatrix::new([[1., 0., 0., 0.], [0., 2., 1., 0.], [3., 0., 0., 2.]]);
         let v = Matrix::new([[1., 2., 3., 4.]]).transpose();
-        let y = Matrix::new([[1., 7., 11., 3.]]).transpose();
+        let y = Matrix::new([[1., 7., 11.]]).transpose();
         assert_eq!(&x * &v, y);
         assert_eq!(x.clone() * &v, y);
         assert_eq!(&x * v.clone(), y);

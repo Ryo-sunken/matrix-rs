@@ -431,7 +431,7 @@ where
             .collect();
 
         Self::Output {
-            rows: rhs.rows,
+            rows: self.rows,
             cols: 1,
             array,
         }
