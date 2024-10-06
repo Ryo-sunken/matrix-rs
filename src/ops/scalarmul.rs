@@ -14,10 +14,11 @@ macro_rules! defscalarmul_rayon {
                 type Output = Matrix<$t>;
 
                 fn mul(self, rhs: &Matrix<$t>) -> Self::Output {
+                    let threads = num_cpus::get();
                     Self::Output {
                         rows: rhs.rows,
                         cols: rhs.cols,
-                        array: rhs.array.par_iter().map(|&x| x * self).collect(),
+                        array: rhs.array.par_iter().with_min_len(rhs.rows * rhs.cols / threads).map(|&x| x * self).collect(),
                     }
                 }
             }
@@ -66,10 +67,16 @@ where
     type Output = Matrix<T>;
 
     fn neg(self) -> Self::Output {
+        let threads = num_cpus::get();
         Self::Output {
             rows: self.rows,
             cols: self.cols,
-            array: self.array.par_iter().map(|&x| -x).collect(),
+            array: self
+                .array
+                .par_iter()
+                .with_min_len(self.rows * self.cols / threads)
+                .map(|&x| -x)
+                .collect(),
         }
     }
 }
@@ -130,10 +137,16 @@ where
     type Output = Matrix<T>;
 
     fn mul(self, rhs: T) -> Self::Output {
+        let threads = num_cpus::get();
         Self::Output {
             rows: self.rows,
             cols: self.cols,
-            array: self.array.par_iter().map(|&x| x * rhs).collect(),
+            array: self
+                .array
+                .par_iter()
+                .with_min_len(self.rows * self.cols / threads)
+                .map(|&x| x * rhs)
+                .collect(),
         }
     }
 }
@@ -186,7 +199,13 @@ where
     Vec<T>: FromParallelIterator<T>,
 {
     fn mul_assign(&mut self, rhs: T) {
-        self.array = self.array.par_iter().map(|&x| x * rhs).collect();
+        let threads = num_cpus::get();
+        self.array = self
+            .array
+            .par_iter()
+            .with_min_len(self.rows * self.cols / threads)
+            .map(|&x| x * rhs)
+            .collect();
     }
 }
 
@@ -209,10 +228,16 @@ where
     type Output = Matrix<T>;
 
     fn div(self, rhs: T) -> Self::Output {
+        let threads = num_cpus::get();
         Self::Output {
             rows: self.rows,
             cols: self.cols,
-            array: self.array.par_iter().map(|&x| x / rhs).collect(),
+            array: self
+                .array
+                .par_iter()
+                .with_min_len(self.rows * self.cols / threads)
+                .map(|&x| x / rhs)
+                .collect(),
         }
     }
 }
@@ -265,7 +290,13 @@ where
     Vec<T>: FromParallelIterator<T>,
 {
     fn div_assign(&mut self, rhs: T) {
-        self.array = self.array.par_iter().map(|&x| x / rhs).collect()
+        let threads = num_cpus::get();
+        self.array = self
+            .array
+            .par_iter()
+            .with_min_len(self.rows * self.cols / threads)
+            .map(|&x| x / rhs)
+            .collect();
     }
 }
 
@@ -275,6 +306,6 @@ where
     T: Div<Output = T> + Copy,
 {
     fn div_assign(&mut self, rhs: T) {
-        self.array = self.array.iter().map(|&x| x / rhs).collect()
+        self.array = self.array.iter().map(|&x| x / rhs).collect();
     }
 }
