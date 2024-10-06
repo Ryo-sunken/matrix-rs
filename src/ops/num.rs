@@ -62,7 +62,11 @@ where
         SparseMatrix::<T> {
             rows: self.rows,
             cols: self.cols,
-            val: idx_val.clone().into_iter().map(|(_, x)| x.clone()).collect(),
+            val: idx_val
+                .clone()
+                .into_iter()
+                .map(|(_, x)| x.clone())
+                .collect(),
             col_idx: idx_val.clone().into_iter().map(|(i, _)| i).collect(),
             row_ptr,
         }

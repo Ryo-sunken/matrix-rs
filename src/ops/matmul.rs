@@ -418,8 +418,57 @@ where
     type Output = Matrix<T>;
 
     fn mul(self, rhs: &Matrix<T>) -> Self::Output {
-        assert!(rhs.cols == 1);
+        assert_eq!(rhs.cols, 1);
 
-        todo!()
+        let array = (0..self.rows)
+            .into_iter()
+            .map(|i| {
+                (self.row_ptr[i]..self.row_ptr[i + 1])
+                    .map(|j| self.val[j] * rhs.array[self.col_idx[j]])
+                    .sum()
+            })
+            .collect();
+
+        Self::Output {
+            rows: rhs.rows,
+            cols: 1,
+            array,
+        }
+    }
+}
+
+#[cfg(not(feature = "rayon"))]
+impl<T> Mul<&Matrix<T>> for SparseMatrix<T>
+where
+    T: Sum + Mul<Output = T> + Copy,
+{
+    type Output = Matrix<T>;
+
+    fn mul(self, rhs: &Matrix<T>) -> Self::Output {
+        &self * rhs
+    }
+}
+
+#[cfg(not(feature = "rayon"))]
+impl<T> Mul<Matrix<T>> for &SparseMatrix<T>
+where
+    T: Sum + Mul<Output = T> + Copy,
+{
+    type Output = Matrix<T>;
+
+    fn mul(self, rhs: Matrix<T>) -> Self::Output {
+        self * &rhs
+    }
+}
+
+#[cfg(not(feature = "rayon"))]
+impl<T> Mul<Matrix<T>> for SparseMatrix<T>
+where
+    T: Sum + Mul<Output = T> + Copy,
+{
+    type Output = Matrix<T>;
+
+    fn mul(self, rhs: Matrix<T>) -> Self::Output {
+        &self * &rhs
     }
 }

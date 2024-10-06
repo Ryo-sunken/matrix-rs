@@ -744,4 +744,29 @@ mod tests {
         );
         assert_eq!(x, x.to_dence().to_sparse())
     }
+
+    #[test]
+    fn sparse_mul() {
+        let x = SparseMatrix::new([
+            [1., 0., 0., 0.],
+            [0., 2., 1., 0.],
+            [3., 0., 0., 2.],
+            [0., 0., 1., 0.],
+        ]);
+        let v = Matrix::new([[1., 2., 3., 4.]]).transpose();
+        let y = Matrix::new([[1., 7., 11., 3.]]).transpose();
+        assert_eq!(&x * &v, y);
+        assert_eq!(x.clone() * &v, y);
+        assert_eq!(&x * v.clone(), y);
+        assert_eq!(x * v.clone(), y);
+
+        let v = v.transpose();
+        let y = Matrix::new([[10., 4., 6., 6.]]);
+        /*
+        assert_eq!(&v * &x, y);
+        assert_eq!(&v * x.clone(), y);
+        assert_eq!(v.clone() * &x, y);
+        assert_eq!(x * v, y);
+        */
+    }
 }
