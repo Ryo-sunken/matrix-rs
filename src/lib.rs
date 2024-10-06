@@ -295,6 +295,11 @@ mod tests {
             x.transpose(),
             Matrix::new([[1., 4., 7.], [2., 5., 8.], [3., 6., 9.]])
         );
+        let x = x.to_sparse();
+        assert_eq!(
+            x.transpose(),
+            SparseMatrix::new([[1., 4., 7.], [2., 5., 8.], [3., 6., 9.]])
+        );
     }
 
     #[test]

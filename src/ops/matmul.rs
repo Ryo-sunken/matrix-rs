@@ -419,6 +419,7 @@ where
 
     fn mul(self, rhs: &Matrix<T>) -> Self::Output {
         assert_eq!(rhs.cols, 1);
+        assert_eq!(self.cols, rhs.rows);
 
         let array = (0..self.rows)
             .into_iter()
