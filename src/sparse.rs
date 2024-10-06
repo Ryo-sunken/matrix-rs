@@ -12,19 +12,19 @@ pub struct SparseMatrix<T> {
 
 impl<T> SparseMatrix<T>
 where
-    T: Zero + Copy,
+    T: Zero + Clone,
 {
     pub fn new<const R: usize, const C: usize>(data: [[T; C]; R]) -> Self {
-        let idx_val: Vec<(usize, T)> = data
+        let idx_val: Vec<(usize, _)> = data
+            .clone()
             .into_iter()
-            .map(|arr| arr.into_iter().enumerate().filter(|(_, x)| !x.is_zero()))
-            .flatten()
+            .flat_map(|row| row.into_iter().enumerate().filter(|(_, x)| !x.is_zero()))
             .collect();
 
         let mut row_ptr: Vec<_> = data
-            .iter()
-            .copied()
-            .map(|arr| arr.iter().filter(|&x| !x.is_zero()).count())
+            .clone()
+            .into_iter()
+            .map(|row| row.into_iter().filter(|x| !x.is_zero()).count())
             .scan(0, |cum, x| {
                 *cum += x;
                 Some(*cum)
@@ -35,8 +35,8 @@ where
         Self {
             rows: R,
             cols: C,
-            val: idx_val.iter().copied().map(|(_, x)| x).collect(),
-            col_idx: idx_val.iter().copied().map(|(i, _)| i).collect(),
+            val: idx_val.clone().into_iter().map(|(_, x)| x).collect(),
+            col_idx: idx_val.clone().into_iter().map(|(i, _)| i).collect(),
             row_ptr,
         }
     }
@@ -49,9 +49,8 @@ where
             if n >= self.row_ptr[i + 1] {
                 i += 1;
             }
-            mat.array[i * self.rows + self.col_idx[n]] = self.val[n];
+            mat.array[i * self.rows + self.col_idx[n]] = self.val[n].clone();
         }
-
         mat
     }
 }

@@ -222,8 +222,7 @@ where
                         .array
                         .chunks(self.rows)
                         .zip(rhs.array.chunks(rhs.rows))
-                        .map(|(s, t)| [s, t].concat())
-                        .flatten()
+                        .flat_map(|(s, t)| [s, t].concat())
                         .collect(),
                 }
             }
@@ -742,6 +741,7 @@ mod tests {
                 [3., 0., 0., 2.],
                 [0., 0., 1., 0.],
             ])
-        )
+        );
+        assert_eq!(x, x.to_dence().to_sparse())
     }
 }
