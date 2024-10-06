@@ -1,5 +1,6 @@
 pub mod ops;
 pub mod rand;
+pub mod sparse;
 pub mod tensor;
 
 use std::cmp::PartialEq;
@@ -233,7 +234,7 @@ where
 // ParticalEq, Eq implementation
 impl<T> PartialEq for Matrix<T>
 where
-    T: PartialEq + Send + Sync,
+    T: PartialEq,
 {
     fn eq(&self, other: &Self) -> bool {
         if self.rows != other.rows || self.cols != other.cols {
@@ -270,7 +271,7 @@ where
 
 #[cfg(test)]
 mod tests {
-    use crate::{Axis, Matrix};
+    use crate::{sparse::SparseMatrix, Axis, Matrix};
 
     #[test]
     fn to_slice() {
@@ -713,5 +714,23 @@ mod tests {
                 [0., 0., 9.]
             ])
         )
+    }
+
+    #[test]
+    fn sparse() {
+        let x = SparseMatrix::new([
+            [1., 0., 0., 0.],
+            [0., 2., 1., 0.],
+            [3., 0., 0., 2.],
+            [0., 0., 1., 0.],
+        ]);
+        assert_eq!(
+            x,
+            SparseMatrix::<f64> {
+                val: vec![1., 2., 1., 3., 2., 1.],
+                col_idx: vec![0, 1, 2, 0, 3, 2],
+                row_ptr: vec![0, 1, 3, 5, 6],
+            }
+        );
     }
 }

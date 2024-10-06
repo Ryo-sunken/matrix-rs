@@ -19,12 +19,14 @@ where
         assert_eq!(self.rows, rhs.rows);
         assert_eq!(self.cols, rhs.cols);
 
+        let threads = num_cpus::get();
         Self {
             rows: self.rows,
             cols: self.cols,
             array: self
                 .array
                 .par_iter()
+                .with_min_len(self.rows * self.cols / threads)
                 .zip(rhs.array.par_iter())
                 .map(|(&x, &y)| x * y)
                 .collect(),
@@ -42,12 +44,14 @@ where
         assert_eq!(self.rows, rhs.rows);
         assert_eq!(self.cols, rhs.cols);
 
+        let threads = num_cpus::get();
         Self {
             rows: self.rows,
             cols: self.cols,
             array: self
                 .array
                 .par_iter()
+                .with_min_len(self.rows * self.cols / threads)
                 .zip(rhs.array.par_iter())
                 .map(|(&x, &y)| x / y)
                 .collect(),
@@ -108,6 +112,7 @@ where
     type Output = Matrix<T>;
 
     fn mul(self, rhs: &Matrix<T>) -> Self::Output {
+        let threads = num_cpus::get();
         // scalar * scalar
         if self.is_scalar() && rhs.is_scalar() {
             return Self::Output {
@@ -120,14 +125,24 @@ where
             return Self::Output {
                 rows: rhs.rows,
                 cols: rhs.cols,
-                array: rhs.array.par_iter().map(|&x| self.array[0] * x).collect(),
+                array: rhs
+                    .array
+                    .par_iter()
+                    .with_min_len(rhs.rows * rhs.cols / threads)
+                    .map(|&x| self.array[0] * x)
+                    .collect(),
             };
         // matrix * scalar
         } else if rhs.is_scalar() {
             return Self::Output {
                 rows: self.rows,
                 cols: self.cols,
-                array: self.array.par_iter().map(|&x| x * rhs.array[0]).collect(),
+                array: self
+                    .array
+                    .par_iter()
+                    .with_min_len(self.rows * self.cols / threads)
+                    .map(|&x| x * rhs.array[0])
+                    .collect(),
             };
         }
 
@@ -141,7 +156,8 @@ where
                 array: vec![self
                     .array
                     .par_iter()
-                    .zip(rhs.array.par_iter())
+                    .with_min_len(self.cols / threads)
+                    .zip(rhs.array.par_iter().with_min_len(rhs.rows / threads))
                     .map(|(&x, &y)| x * y)
                     .sum()],
             };
@@ -153,13 +169,8 @@ where
                 array: rhs
                     .transpose()
                     .array
-                    .chunks(rhs.rows)
-                    .map(|s| {
-                        s.par_iter()
-                            .zip(self.array.par_iter())
-                            .map(|(&x, &y)| x * y)
-                            .sum()
-                    })
+                    .par_chunks(rhs.rows)
+                    .map(|s| s.iter().zip(self.array.iter()).map(|(&x, &y)| x * y).sum())
                     .collect::<Vec<_>>(),
             };
         // matrix * col_vector
@@ -169,13 +180,8 @@ where
                 cols: 1,
                 array: self
                     .array
-                    .chunks(self.cols)
-                    .map(|s| {
-                        s.par_iter()
-                            .zip(rhs.array.par_iter())
-                            .map(|(&x, &y)| x * y)
-                            .sum()
-                    })
+                    .par_chunks(self.cols)
+                    .map(|s| s.iter().zip(rhs.array.iter()).map(|(&x, &y)| x * y).sum())
                     .collect::<Vec<_>>(),
             };
         }
@@ -188,23 +194,34 @@ where
                 array: rhs
                     .array
                     .par_iter()
-                    .flat_map(|&x| self.array.par_iter().map(move |&y| x * y))
+                    .with_min_len(self.rows * rhs.cols / threads)
+                    .flat_map(|&x| {
+                        self.array
+                            .par_iter()
+                            .with_min_len(self.rows * rhs.cols / threads)
+                            .map(move |&y| x * y)
+                    })
                     .collect(),
             };
         }
 
-        let mut array = Vec::with_capacity(self.rows * rhs.cols);
-        for r in 0..self.rows {
-            for c in 0..rhs.cols {
-                array.push(
-                    self.array[(r * self.cols)..((r + 1) * self.cols)]
-                        .iter()
-                        .zip(0..self.cols)
-                        .map(|(&s, oi)| s * rhs.array[oi * rhs.cols + c])
-                        .sum(),
-                )
-            }
-        }
+        let array = (0..self.rows)
+            .into_par_iter()
+            .with_min_len(self.rows / threads)
+            .map(|r| {
+                (0..rhs.cols)
+                    .into_par_iter()
+                    .with_min_len(rhs.cols / threads)
+                    .map(move |c| {
+                        self.array[(r * self.cols)..((r + 1) * self.cols)]
+                            .iter()
+                            .zip(0..self.cols)
+                            .map(|(&s, oi)| s * rhs.array[oi * rhs.cols + c])
+                            .sum()
+                    })
+            })
+            .flatten()
+            .collect();
 
         Self::Output {
             rows: self.rows,
